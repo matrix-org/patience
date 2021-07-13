@@ -5,7 +5,9 @@
   "author": "The Matrix.org Foundation C.I.C.",
   "license": "Apache-2.0",
   "main": "index.ts",
-  "scripts": {},
+  "scripts": {
+    "start": "snowpack dev"
+  },
   "devDependencies": {
     "snowpack": "^3.8.2"
   }
