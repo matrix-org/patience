@@ -1,0 +1,10 @@
+{
+  "name": "patience",
+  "version": "0.0.0",
+  "description": "Integration test harness for Matrix clients and servers",
+  "author": "The Matrix.org Foundation C.I.C.",
+  "license": "Apache-2.0",
+  "main": "index.ts",
+  "scripts": {
+  }
+}
