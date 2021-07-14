@@ -7,12 +7,18 @@
     "scripts": {
         "start": "snowpack dev",
         "type": "tsc",
+        "lint": "eslint ./src",
         "build": "snowpack build"
     },
     "dependencies": {
         "preact": "^10.5.14"
     },
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.28.3",
+        "@typescript-eslint/parser": "^4.28.3",
+        "eslint": "^7.30.0",
+        "eslint-config-google": "^0.14.0",
+        "eslint-plugin-matrix-org": "github:matrix-org/eslint-plugin-matrix-org#main",
         "snowpack": "^3.8.2",
         "typescript": "^4.3.5"
     }
