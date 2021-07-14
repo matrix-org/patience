@@ -8,6 +8,9 @@
         "start": "snowpack dev",
         "build": "snowpack build"
     },
+    "dependencies": {
+        "preact": "^10.5.14"
+    },
     "devDependencies": {
         "snowpack": "^3.8.2"
     }
