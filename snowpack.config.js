@@ -18,6 +18,6 @@ module.exports = {
         port: 7284,
     },
     buildOptions: {
-        /* ... */
+        out: "./build",
     },
 };
