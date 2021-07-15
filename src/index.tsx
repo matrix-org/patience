@@ -19,11 +19,11 @@ limitations under the License.
 // version of `esbuild` could optimise this away, but it needs an upgrade to
 // esbuild 0.10.0 to support top-level await.
 // https://github.com/snowpackjs/snowpack/issues/3402
-if (import.meta.env.MODE === 'development') {
+if (import.meta.env.MODE === "development") {
     await import("preact/debug");
 }
 
-import { h, render } from 'preact';
+import { h, render } from "preact";
 
 render(<div>
     Hello Preact!

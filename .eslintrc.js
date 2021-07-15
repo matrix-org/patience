@@ -16,14 +16,14 @@ module.exports = {
         },
     },
     rules: {
-        "quotes": "off",
+        "quotes": ["error", "double"],
 
         // React rules adapted from eslint-plugin-matrix-org
         // Rules for hooks removed to avoid extra dependencies
 
         "max-len": ["warn", {
             // Ignore pure JSX lines
-            ignorePattern: '^\\s*<',
+            ignorePattern: "^\\s*<",
             ignoreComments: true,
             code: 120,
         }],
