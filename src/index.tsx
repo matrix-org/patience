@@ -23,38 +23,43 @@ if (import.meta.env.MODE === "development") {
     await import("preact/debug");
 }
 
-import { h, render, FunctionComponent } from "preact";
+import { h, Fragment, render, FunctionComponent } from "preact";
 import { observer } from "mobx-react";
 import { types } from "mobx-state-tree";
 
 const Store = types
     .model("Store", {
-        title: "MST",
+        list: types.array(types.string),
     })
     .actions(self => ({
-        cycle() {
+        add() {
             const titles = [
                 "world",
                 "Preact",
                 "MobX",
                 "MST",
             ];
-            self.title = titles[Math.floor(Math.random() * titles.length)];
+            self.list.push(titles[Math.floor(Math.random() * titles.length)]);
         },
     }));
 
-const store = Store.create();
-
-setInterval(() => {
-    store.cycle();
-}, 500);
+const store = Store.create({
+    list: ["MobX"],
+});
 
 interface AppProps {
     store: typeof store;
 }
 
-const App: FunctionComponent<AppProps> = observer(({ store }) => <div>
-    Hello {store.title}!
-</div>);
+const App: FunctionComponent<AppProps> = observer(({ store }) => {
+    const list = store.list.map(title => <li>
+        Hello {title}!
+    </li>);
+
+    return <>
+        <button onClick={store.add}>Add</button>
+        {list}
+    </>;
+});
 
 render(<App store={store} />, document.body);
