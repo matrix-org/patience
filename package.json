@@ -11,6 +11,8 @@
         "build": "snowpack build"
     },
     "dependencies": {
+        "mobx": "^6.3.2",
+        "mobx-react": "^7.2.0",
         "preact": "^10.5.14"
     },
     "devDependencies": {

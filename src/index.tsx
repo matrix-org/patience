@@ -23,8 +23,31 @@ if (import.meta.env.MODE === "development") {
     await import("preact/debug");
 }
 
-import { h, render } from "preact";
+import { h, render, FunctionComponent } from "preact";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
 
-render(<div>
-    Hello Preact!
-</div>, document.body);
+const state = observable({
+    value: "MobX",
+});
+
+setInterval(() => {
+    const titles = [
+        "world",
+        "Preact",
+        "MobX",
+    ];
+    state.value = titles[Math.floor(Math.random() * 3)];
+}, 500);
+
+interface AppProps {
+    title: {
+        value: string;
+    };
+}
+
+const App: FunctionComponent<AppProps> = observer(({ title }) => <div>
+    Hello {title.value}!
+</div>);
+
+render(<App title={state} />, document.body);
