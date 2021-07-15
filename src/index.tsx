@@ -24,30 +24,37 @@ if (import.meta.env.MODE === "development") {
 }
 
 import { h, render, FunctionComponent } from "preact";
-import { observable } from "mobx";
 import { observer } from "mobx-react";
+import { types } from "mobx-state-tree";
 
-const state = observable({
-    value: "MobX",
-});
+const Store = types
+    .model("Store", {
+        title: "MST",
+    })
+    .actions(self => ({
+        cycle() {
+            const titles = [
+                "world",
+                "Preact",
+                "MobX",
+                "MST",
+            ];
+            self.title = titles[Math.floor(Math.random() * titles.length)];
+        },
+    }));
+
+const store = Store.create();
 
 setInterval(() => {
-    const titles = [
-        "world",
-        "Preact",
-        "MobX",
-    ];
-    state.value = titles[Math.floor(Math.random() * 3)];
+    store.cycle();
 }, 500);
 
 interface AppProps {
-    title: {
-        value: string;
-    };
+    store: typeof store;
 }
 
-const App: FunctionComponent<AppProps> = observer(({ title }) => <div>
-    Hello {title.value}!
+const App: FunctionComponent<AppProps> = observer(({ store }) => <div>
+    Hello {store.title}!
 </div>);
 
-render(<App title={state} />, document.body);
+render(<App store={store} />, document.body);
