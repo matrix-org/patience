@@ -19,6 +19,7 @@
         "eslint": "^7.30.0",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-matrix-org": "github:matrix-org/eslint-plugin-matrix-org#main",
+        "eslint-plugin-react": "^7.24.0",
         "snowpack": "^3.8.2",
         "typescript": "^4.3.5"
     }
