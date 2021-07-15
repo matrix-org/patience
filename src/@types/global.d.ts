@@ -14,17 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// TODO: When using Snowpack without a production bundler, this is still
-// included in the build output, but it will not actually run. The built-in
-// version of `esbuild` could optimise this away, but it needs an upgrade to
-// esbuild 0.10.0 to support top-level await.
-// https://github.com/snowpackjs/snowpack/issues/3402
-if (import.meta.env.MODE === 'development') {
-    await import("preact/debug");
+declare module 'preact/debug';
+
+interface ImportMeta {
+    env: {
+        [key: string]: string;
+    };
 }
-
-import { h, render } from 'preact';
-
-render(<div>
-    Hello Preact!
-</div>, document.body);
