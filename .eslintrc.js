@@ -46,4 +46,15 @@ module.exports = {
         // Empty interfaces are useful for declaring new names
         "@typescript-eslint/no-empty-interface": ["off"],
     },
+    overrides: [{
+        files: [
+            "**/*.js",
+        ],
+        extends: [
+            "plugin:matrix-org/javascript",
+        ],
+        rules: {
+            "quotes": ["error", "double"],
+        },
+    }],
 };
