@@ -23,6 +23,7 @@ import type { IClient } from "../../stores/client";
 const ElementWebFrame: FunctionComponent<{ client: IClient }> = observer(({ client }) => {
     return <div className="client-frame">
         {client.name}
+        <iframe src="/client/element-web/"></iframe>
     </div>;
 });
 
