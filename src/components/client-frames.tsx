@@ -22,7 +22,7 @@ import type { IClient, IClientStore } from "../stores/client";
 import getFrameForClient from "./frames";
 
 const ClientFrames: FunctionComponent<{ store: IClientStore }> = observer(({ store }) => {
-    return <div>
+    return <div className="client-frames">
         {store.clients.map((client: IClient) => {
             return h(getFrameForClient(client), { client });
         })}

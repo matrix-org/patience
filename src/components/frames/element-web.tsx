@@ -21,7 +21,7 @@ import { observer } from "mobx-react";
 import type { IClient } from "../../stores/client";
 
 const ElementWebFrame: FunctionComponent<{ client: IClient }> = observer(({ client }) => {
-    return <div>
+    return <div className="client-frame">
         {client.name}
     </div>;
 });

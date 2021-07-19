@@ -17,3 +17,11 @@ limitations under the License.
 body {
     font-family: sans-serif;
 }
+
+.client-frames {
+    display: flex;
+}
+
+.client-frame {
+    flex: 1;
+}
