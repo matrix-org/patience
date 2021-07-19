@@ -4,18 +4,9 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
     root: "./src",
-    mount: {
-        /* ... */
-    },
-    plugins: [
-        /* ... */
-    ],
     alias: {
         "react": "preact/compat",
         "react-dom": "preact/compat",
-    },
-    packageOptions: {
-        /* ... */
     },
     devOptions: {
         open: "none",
