@@ -25,40 +25,14 @@ if (import.meta.env.MODE === "development") {
 
 import { h, Fragment, render, FunctionComponent } from "preact";
 import { observer } from "mobx-react";
-import { types } from "mobx-state-tree";
 
-const Store = types
-    .model("Store", {
-        list: types.array(types.string),
-    })
-    .actions(self => ({
-        add() {
-            const titles = [
-                "world",
-                "Preact",
-                "MobX",
-                "MST",
-            ];
-            self.list.push(titles[Math.floor(Math.random() * titles.length)]);
-        },
-    }));
+import ClientFrames from "./components/client-frames";
+import type { IClientStore } from "./stores/client";
+import store from "./stores/client";
 
-const store = Store.create({
-    list: ["MobX"],
-});
-
-interface AppProps {
-    store: typeof store;
-}
-
-const App: FunctionComponent<AppProps> = observer(({ store }) => {
-    const list = store.list.map(title => <li>
-        Hello {title}!
-    </li>);
-
+const App: FunctionComponent<{ store: IClientStore }> = observer(({ store }) => {
     return <>
-        <button onClick={store.add}>Add</button>
-        {list}
+        <ClientFrames store={store} />
     </>;
 });
 

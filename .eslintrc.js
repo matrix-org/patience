@@ -42,5 +42,8 @@ module.exports = {
         // bracket of the opening tag or closing tag.
         // https://github.com/yannickcr/eslint-plugin-react/blob/HEAD/docs/rules/jsx-tag-spacing.md
         "react/jsx-tag-spacing": ["error"],
+
+        // Empty interfaces are useful for declaring new names
+        "@typescript-eslint/no-empty-interface": ["off"],
     },
 };
