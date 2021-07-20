@@ -23,6 +23,12 @@ if (import.meta.env.MODE === "development") {
     await import("preact/debug");
 }
 
+// TODO: Ideally we could include CSS only via HTML (so that it loads before JS)
+// and still have HMR, but that seems to confuse Snowpack at the moment. By
+// including it here instead, we get working HMR, which is more important that
+// CSS load time during development.
+import "./index.css";
+
 import { h, Fragment, render, FunctionComponent } from "preact";
 import { observer } from "mobx-react";
 
