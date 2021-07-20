@@ -25,7 +25,13 @@ const Client = types
         id: types.identifier,
         name: types.string,
         kind: types.enumeration<ClientKind>(Object.values(ClientKind)),
-    });
+        active: false,
+    })
+    .actions(self => ({
+        start() {
+            self.active = true;
+        },
+    }));
 
 export interface IClient extends Instance<typeof Client> { }
 

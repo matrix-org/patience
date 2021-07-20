@@ -14,16 +14,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { IClientStore } from "../stores/client";
-
-declare global {
-    interface ImportMeta {
-        env: {
-            [key: string]: string;
-        };
-    }
-
-    interface Window {
-        store: IClientStore;
-    }
-}
+declare module "preact/debug";

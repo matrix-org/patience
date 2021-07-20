@@ -43,3 +43,5 @@ const App: FunctionComponent<{ store: IClientStore }> = observer(({ store }) => 
 });
 
 render(<App store={store} />, document.body);
+
+window.store = store;
