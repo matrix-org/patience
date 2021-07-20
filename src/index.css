@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: sans-serif;
 }
@@ -24,4 +28,29 @@ body {
 
 .client-frame {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-inline: 4px;
+}
+
+.client-frame:first-child {
+    margin-inline-start: 0;
+}
+
+.client-frame:last-child {
+    margin-inline-end: 0;
+}
+
+.client-frame-name {
+    margin-block-end: 8px;
+}
+
+.client-frame-frame {
+    min-height: 400px;
+}
+
+.client-frame-frame > * {
+    height: 100%;
+    width: 100%;
+    border: 1px solid;
 }
