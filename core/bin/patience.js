@@ -24,6 +24,7 @@ const cwd = process.cwd();
 childProcess.spawnSync("npx", [
     "web-test-runner",
     path.join(cwd, process.argv[2]),
+    ...process.argv.slice(3),
 ], {
     stdio: "inherit",
     // Run as if we're in the core directory
