@@ -4,6 +4,9 @@
     "description": "Integration test harness for Matrix clients and servers",
     "author": "The Matrix.org Foundation C.I.C.",
     "license": "Apache-2.0",
+    "bin": {
+        "patience": "./bin/patience.js"
+    },
     "scripts": {
         "start": "snowpack dev",
         "type": "tsc",

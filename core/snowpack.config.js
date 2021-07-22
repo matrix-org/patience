@@ -1,7 +1,16 @@
 // Snowpack Configuration File
 // See all supported options: https://www.snowpack.dev/reference/configuration
 
+const path = require("path");
+
 const proxy = require("http2-proxy");
+
+const mount = {};
+// Mount test directory if running tests via `patience` command
+if (process.env.PATIENCE_TEST_DIR) {
+    const testDir = process.env.PATIENCE_TEST_DIR;
+    mount[testDir] = "/" + path.basename(testDir);
+}
 
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
@@ -14,6 +23,7 @@ module.exports = {
         open: "none",
         port: 7284,
     },
+    mount,
     routes: [
         {
             src: "/client/element-web.*",
