@@ -55,6 +55,9 @@ module.exports = {
         ],
         rules: {
             "quotes": ["error", "double"],
+
+            // Unsure why TS rules are being loaded at all...
+            "@typescript-eslint/no-var-requires": ["off"],
         },
     }],
 };
