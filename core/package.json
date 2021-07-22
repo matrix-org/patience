@@ -11,10 +11,12 @@
         "build": "snowpack build"
     },
     "dependencies": {
+        "http2-proxy": "^5.0.53",
         "mobx": "^6.3.2",
         "mobx-react": "^7.2.0",
         "mobx-state-tree": "^5.0.2",
-        "preact": "^10.5.14"
+        "preact": "^10.5.14",
+        "snowpack": "^3.8.2"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.28.3",
@@ -23,8 +25,6 @@
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-matrix-org": "github:matrix-org/eslint-plugin-matrix-org#main",
         "eslint-plugin-react": "^7.24.0",
-        "http2-proxy": "^5.0.53",
-        "snowpack": "^3.8.2",
         "typescript": "^4.3.5"
     }
 }
