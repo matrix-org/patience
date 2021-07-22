@@ -20,6 +20,6 @@ limitations under the License.
 
 import { expect } from "chai";
 
-it("sums up 2 numbers", () => {
-    expect(2).to.equal(2);
+it("displays 2 client frames", () => {
+    expect(window.frames.length).to.equal(2);
 });

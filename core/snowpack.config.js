@@ -5,7 +5,11 @@ const path = require("path");
 
 const proxy = require("http2-proxy");
 
-const mount = {};
+const mount = {
+    // Mount the core under a subdirectory so it won't be clobbered by test
+    // runners who take the root directory
+    "./src": "/patience",
+};
 // Mount test directory if running tests via `patience` command
 if (process.env.PATIENCE_TEST_DIR) {
     const testDir = process.env.PATIENCE_TEST_DIR;
