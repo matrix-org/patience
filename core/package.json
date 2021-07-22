@@ -11,6 +11,9 @@
         "build": "snowpack build"
     },
     "dependencies": {
+        "@snowpack/web-test-runner-plugin": "^0.2.2",
+        "@web/test-runner": "^0.13.15",
+        "chai": "^4.3.4",
         "http2-proxy": "^5.0.53",
         "mobx": "^6.3.2",
         "mobx-react": "^7.2.0",
