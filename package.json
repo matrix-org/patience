@@ -1,30 +1,7 @@
 {
-    "name": "@matrix-org/patience",
-    "version": "0.0.0",
-    "description": "Integration test harness for Matrix clients and servers",
-    "author": "The Matrix.org Foundation C.I.C.",
-    "license": "Apache-2.0",
-    "scripts": {
-        "start": "snowpack dev",
-        "type": "tsc",
-        "lint": "eslint ./src",
-        "build": "snowpack build"
-    },
-    "dependencies": {
-        "mobx": "^6.3.2",
-        "mobx-react": "^7.2.0",
-        "mobx-state-tree": "^5.0.2",
-        "preact": "^10.5.14"
-    },
-    "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^4.28.3",
-        "@typescript-eslint/parser": "^4.28.3",
-        "eslint": "^7.30.0",
-        "eslint-config-google": "^0.14.0",
-        "eslint-plugin-matrix-org": "github:matrix-org/eslint-plugin-matrix-org#main",
-        "eslint-plugin-react": "^7.24.0",
-        "http2-proxy": "^5.0.53",
-        "snowpack": "^3.8.2",
-        "typescript": "^4.3.5"
-    }
+    "private": true,
+    "workspaces": [
+        "core",
+        "examples"
+    ]
 }
