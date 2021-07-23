@@ -19,7 +19,9 @@ limitations under the License.
 // to login for each test.
 
 import { expect } from "chai";
+// import { executeServerCommand } from "@web/test-runner-commands";
 
-it("displays 2 client frames", () => {
+it("displays 2 client frames", async () => {
+    // await executeServerCommand("blob");
     expect(window.frames.length).to.equal(2);
 });

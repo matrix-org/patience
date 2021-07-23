@@ -4,9 +4,12 @@
     "author": "The Matrix.org Foundation C.I.C.",
     "license": "Apache-2.0",
     "scripts": {
-        "test": "patience *.js"
+        "test": "patience *.ts"
     },
-    "dependencies": {
-        "@matrix-org/patience": "^0.0.0"
+    "devDependencies": {
+        "@matrix-org/patience": "^0.0.0",
+        "@types/chai": "^4.2.21",
+        "@types/mocha": "^8.2.3",
+        "chai": "^4.3.4"
     }
 }
