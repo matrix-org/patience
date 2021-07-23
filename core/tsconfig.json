@@ -15,7 +15,4 @@
         "resolveJsonModule": true,
         "importsNotUsedAsValues": "error"
     },
-    "include": [
-        "./src",
-    ],
 }

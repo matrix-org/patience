@@ -10,7 +10,7 @@
     "scripts": {
         "start": "snowpack dev",
         "type": "tsc",
-        "lint": "eslint ./src",
+        "lint": "eslint .",
         "build": "snowpack build"
     },
     "dependencies": {

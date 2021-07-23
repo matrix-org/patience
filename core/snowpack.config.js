@@ -8,7 +8,7 @@ const proxy = require("http2-proxy");
 const mount = {
     // Mount the core under a subdirectory so it won't be clobbered by test
     // runners who take the root directory
-    "./src": "/patience",
+    "./framework": "/framework",
 };
 // Mount test directory if running tests via `patience` command
 if (process.env.PATIENCE_TEST_DIR) {
@@ -18,7 +18,7 @@ if (process.env.PATIENCE_TEST_DIR) {
 
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
-    root: "./src",
+    root: "./framework",
     alias: {
         "react": "preact/compat",
         "react-dom": "preact/compat",

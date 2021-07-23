@@ -8,7 +8,7 @@ process.env.NODE_ENV = "test";
 module.exports = {
     plugins: [require("@snowpack/web-test-runner-plugin")()],
     testRunnerHtml: testFramework => {
-        const html = fs.readFileSync("./src/index.html", "utf8");
+        const html = fs.readFileSync("./framework/index.html", "utf8");
         return html.replace("${testFramework}", testFramework);
     },
 };
