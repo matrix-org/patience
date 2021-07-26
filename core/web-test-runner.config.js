@@ -1,6 +1,7 @@
 const fs = require("fs");
 
 const snowpackPlugin = require("@snowpack/web-test-runner-plugin");
+const harnessPlugin = require("./api/harness");
 
 process.env.NODE_ENV = "test";
 
@@ -19,6 +20,7 @@ module.exports = {
     ],
     plugins: [
         snowpackPlugin(),
+        harnessPlugin,
     ],
     testRunnerHtml: testFramework => {
         const html = fs.readFileSync("./framework/index.html", "utf8");

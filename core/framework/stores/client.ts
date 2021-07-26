@@ -15,10 +15,7 @@ limitations under the License.
 */
 
 import { Instance, types } from "mobx-state-tree";
-
-export enum ClientKind {
-    ElementWeb = "Element Web",
-}
+import { ClientKind } from "../../types/client";
 
 const Client = types
     .model("Client", {

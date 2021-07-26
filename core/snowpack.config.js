@@ -18,7 +18,8 @@ if (process.env.PATIENCE_TEST_DIR) {
 
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
-    root: "./framework",
+    root: ".",
+    workspaceRoot: "..",
     alias: {
         "react": "preact/compat",
         "react-dom": "preact/compat",

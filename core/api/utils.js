@@ -14,15 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { ComponentType } from "preact";
-
-import type { IClient } from "../../stores/client";
-import { ClientKind } from "../../../types/client";
-import ElementWebFrame from "./element-web";
-
-export default function getFrameForClient(client: IClient): ComponentType<{ client: IClient }> {
-    switch (client.kind) {
-        case ClientKind.ElementWeb:
-            return ElementWebFrame;
-    }
+function camelToSnake(camel) {
+    return camel.replace(/[A-Z]/g, value => `_${value.toLowerCase()}`);
 }
+
+module.exports = {
+    camelToSnake,
+};
