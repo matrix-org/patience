@@ -13,6 +13,12 @@
         "isolatedModules": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
-        "importsNotUsedAsValues": "error"
+        "importsNotUsedAsValues": "error",
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        "compilerOptions": {
+            "module": "commonjs",
+        },
     },
 }

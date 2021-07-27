@@ -28,14 +28,14 @@ import { ClientKind } from "@matrix-org/patience/types/client";
 it("displays 2 client frames", async function() {
     this.timeout(10000);
 
-    const response = await orchestrate({
+    const { servers } = await orchestrate({
         servers: {
             baseImageUri: "complement-synapse",
             blueprintName: "oneToOneRoom",
         },
         clients: ClientKind.ElementWeb,
     });
-    console.log(response);
-    expect(Object.keys(response.homeservers.hs1.AccessTokens).length).to.equal(2);
+    console.log(servers);
+    expect(Object.keys(servers.homeservers.hs1.accessTokens).length).to.equal(2);
     expect(window.frames.length).to.equal(2);
 });

@@ -14,67 +14,74 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const childProcess = require("child_process");
-const http = require("http");
-const process = require("process");
+import childProcess from "child_process";
+import http from "http";
+import process from "process";
 
-const { camelToSnake } = require("./utils");
+import type { Plugin } from "@web/dev-server-core";
 
+import type { IComplementResponse, IOrchestrationRequest, IOrchestrationResponse } from "./rpc";
+import { camelToSnake, Data, fromHomerunner } from "./utils";
+
+// Needs `homerunner` from Complement, try running `go install ./cmd/homerunner`
+// in a Complement checkout.
 const HOMERUNNER_URL = "http://localhost:54321";
 
-let instance;
+let instance: Orchestrator;
 
 class Orchestrator {
-    constructor() {
-        this.homerunnerProcess = null;
-    }
+    private homerunnerProcess?: childProcess.ChildProcess;
 
-    static getInstance() {
+    static getInstance(): Orchestrator {
         if (!instance) {
             instance = new Orchestrator();
         }
         return instance;
     }
 
-    async orchestrate({ servers }) {
-        console.log(servers);
+    async orchestrate(orReq: IOrchestrationRequest): Promise<IOrchestrationResponse> {
+        console.log(orReq.servers);
         await this.startHomerunner();
 
-        const deployment = await new Promise((resolve, reject) => {
-            const request = http.request(`${HOMERUNNER_URL}/create`, {
+        const deployment = await new Promise<IComplementResponse>((resolve, reject) => {
+            const hrReq = http.request(`${HOMERUNNER_URL}/create`, {
                 method: "POST",
-            }, response => {
-                response.setEncoding("utf8");
-                response.on("data", data => {
-                    if (response.statusCode === 200) {
+            }, hrRes => {
+                hrRes.setEncoding("utf8");
+                hrRes.on("data", data => {
+                    if (hrRes.statusCode === 200) {
                         resolve(JSON.parse(data));
                     } else {
                         reject(new Error(JSON.parse(data).message));
                     }
                 });
             });
-            request.write(JSON.stringify({
-                base_image_uri: servers.baseImageUri,
-                blueprint_name: camelToSnake(servers.blueprintName),
+            hrReq.write(JSON.stringify({
+                base_image_uri: orReq.servers.baseImageUri,
+                blueprint_name: camelToSnake(orReq.servers.blueprintName),
             }));
-            request.end();
+            hrReq.end();
         });
 
-        return deployment;
+        return {
+            // Surely there's a more natural way to do this...
+            servers: fromHomerunner(deployment as unknown as Data) as unknown as IComplementResponse,
+        };
     }
 
     async startHomerunner() {
         if (this.homerunnerProcess) {
             return;
         }
+
         this.homerunnerProcess = await childProcess.spawn("homerunner");
         process.on("exit", () => {
-            this.homerunnerProcess.kill();
+            this.homerunnerProcess?.kill();
         });
 
-        await new Promise(resolve => {
-            this.homerunnerProcess.stderr.setEncoding("utf8");
-            this.homerunnerProcess.stderr.on("data", data => {
+        await new Promise<void>(resolve => {
+            this.homerunnerProcess?.stderr?.setEncoding("utf8");
+            this.homerunnerProcess?.stderr?.on("data", data => {
                 console.log(data);
                 if (data.includes("Homerunner listening")) {
                     console.log("Homerunner started");
@@ -89,11 +96,13 @@ module.exports = {
     name: "patience",
     injectWebSocket: true,
     serverStart({ webSockets }) {
-        webSockets.on("message", async ({ webSocket, data }) => {
+        webSockets?.on("message", async ({ webSocket, data }) => {
             try {
                 const { type, request } = data;
                 if (type === "orchestrate") {
-                    const response = await Orchestrator.getInstance().orchestrate(request);
+                    const response = await Orchestrator.getInstance().orchestrate(
+                        request as IOrchestrationRequest,
+                    );
                     webSocket.send(JSON.stringify({
                         type: "message-response",
                         id: data.id,
@@ -110,4 +119,4 @@ module.exports = {
             }
         });
     },
-};
+} as Plugin;

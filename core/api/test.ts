@@ -17,34 +17,9 @@ limitations under the License.
 // This file is imported by tests using the harness to arrange things like
 // servers and clients for use in the test.
 
-import type { ClientKind } from "../types/client";
+import type { IOrchestrationRequest, IOrchestrationResponse } from "./rpc";
 
-// Needs `homerunner` from Complement, try running `go install ./cmd/homerunner`
-// in a Complement checkout.
-
-// See https://github.com/matrix-org/complement/tree/master/internal/b
-type PredefinedBlueprint =
-    "alice" |
-    "cleanHs" |
-    "federationOneToOneRoom" |
-    "federationTwoLocalOneRemote" |
-    "hsWithApplicationService" |
-    "oneToOneRoom" |
-    "perfE2eeRoom" |
-    "perfManyMessages" |
-    "perfManyRooms";
-
-export interface IComplementRequest {
-    baseImageUri: string;
-    blueprintName: PredefinedBlueprint;
-}
-
-export interface IOrchestrationRequest {
-    servers: IComplementRequest;
-    clients: ClientKind | ClientKind[];
-}
-
-export async function orchestrate(request: IOrchestrationRequest) {
+export async function orchestrate(request: IOrchestrationRequest): Promise<IOrchestrationResponse> {
     // @ts-expect-error: No types available, maybe add some locally
     const webSocketModule = await import("/__web-dev-server__web-socket.js");
     const { sendMessageWaitForResponse } = webSocketModule;

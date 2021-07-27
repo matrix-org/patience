@@ -21,9 +21,15 @@ const path = require("path");
 
 const cwd = process.cwd();
 
+const testRunnerBinPath = require.resolve("@web/test-runner")
+    .replace(/test-runner.*$/, "test-runner/dist/bin.js");
+
 childProcess.spawnSync("npx", [
-    "web-test-runner",
+    "ts-node",
+    testRunnerBinPath,
+    // Tests to run, e.g. `*.ts`
     path.join(cwd, process.argv[2]),
+    // Any remaining args are passed through
     ...process.argv.slice(3),
 ], {
     stdio: "inherit",
