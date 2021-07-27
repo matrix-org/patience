@@ -30,7 +30,8 @@ it("displays 2 client frames", async function() {
 
     const { servers } = await orchestrate({
         servers: {
-            baseImageUri: "complement-synapse",
+            // TODO: Maybe default to this and avoid embedding in tests
+            baseImageUri: "complement-dendrite",
             blueprintName: "oneToOneRoom",
         },
         clients: ClientKind.ElementWeb,
