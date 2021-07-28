@@ -18,6 +18,7 @@ limitations under the License.
 // servers and clients for use in the test.
 
 import type { ClientKind, IClientSnapshotIn } from "../types/client";
+import getAdapterForClient from "./adapters";
 import type { IHomerunnerResponse, IOrchestrationRequest, IOrchestrationResponse } from "./rpc";
 
 export async function orchestrate(request: IOrchestrationRequest): Promise<IOrchestrationResponse> {
@@ -47,7 +48,8 @@ export async function orchestrate(request: IOrchestrationRequest): Promise<IOrch
 
     // TODO: This will return _all_ clients if this function is called more than
     // once per test.
-    const clients = window.store.clients;
+    const clients = window.store.clients.map(cli => getAdapterForClient(cli));
+    window.clients = clients;
 
     return {
         servers,

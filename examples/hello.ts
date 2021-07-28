@@ -25,18 +25,23 @@ import { ClientKind } from "@matrix-org/patience/types/client";
 // Would be nice if clients could use snapshotted sessions, rather than needing
 // to login for each test.
 
-it("displays 2 client frames", async function() {
-    const { servers, clients } = await orchestrate({
-        servers: {
-            // TODO: Maybe default to this and avoid embedding in tests
-            baseImageUri: "complement-dendrite",
-            blueprintName: "oneToOneRoom",
-        },
-        clients: ClientKind.ElementWeb,
-    });
-    console.log(servers, clients);
+const { servers, clients } = await orchestrate({
+    servers: {
+        // TODO: Maybe default to this and avoid embedding in tests
+        baseImageUri: "complement-dendrite",
+        blueprintName: "oneToOneRoom",
+    },
+    clients: ClientKind.ElementWeb,
+});
+console.log(servers, clients);
 
+it("displays 2 client frames", async function() {
     expect(Object.keys(servers.homeservers.hs1.accessTokens).length).to.equal(2);
     expect(clients.length).to.equal(2);
     expect(window.frames.length).to.equal(2);
+});
+
+it("logs into both clients", async function() {
+    await clients[0].start();
+    await clients[0].login();
 });

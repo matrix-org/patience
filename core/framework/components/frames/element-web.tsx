@@ -26,7 +26,7 @@ const ElementWebFrame: FunctionComponent<{ client: IClient }> = observer(({ clie
     return <div className="client-frame">
         <div className="client-frame-name">{client.name} ({client.userId})</div>
         <div className="client-frame-frame">
-            <iframe src={location}></iframe>
+            <iframe id={client.userId} src={location}></iframe>
         </div>
     </div>;
 });

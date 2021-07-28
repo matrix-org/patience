@@ -14,18 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { IClientAdapter } from "../../api/adapters";
-import type { IClientStore } from "../stores/client";
+import { ClientKind, IClient } from "../../types/client";
+import ElementWebAdapter from "./element-web";
 
-declare global {
-    interface ImportMeta {
-        env: {
-            [key: string]: string;
-        };
-    }
+export interface IClientAdapter {
+    model: IClient;
+    start(): Promise<void>;
+    login(): Promise<void>;
+}
 
-    interface Window {
-        store: IClientStore;
-        clients: IClientAdapter[];
+export default function getAdapterForClient(client: IClient): IClientAdapter {
+    switch (client.kind) {
+        case ClientKind.ElementWeb:
+            return new ElementWebAdapter(client);
     }
 }

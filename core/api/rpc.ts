@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { ClientKind, IClient } from "../types/client";
+import type { ClientKind } from "../types/client";
+import type { IClientAdapter } from "./adapters";
 
 // See https://github.com/matrix-org/complement/tree/master/internal/b
 type PredefinedBlueprint =
@@ -56,5 +57,5 @@ export interface IOrchestrationRequest {
 
 export interface IOrchestrationResponse {
     servers: IHomerunnerResponse;
-    clients: IClient[];
+    clients: IClientAdapter[];
 }
