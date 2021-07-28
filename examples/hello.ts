@@ -26,8 +26,6 @@ import { ClientKind } from "@matrix-org/patience/types/client";
 // to login for each test.
 
 it("displays 2 client frames", async function() {
-    this.timeout(10000);
-
     const { servers, clients } = await orchestrate({
         servers: {
             // TODO: Maybe default to this and avoid embedding in tests

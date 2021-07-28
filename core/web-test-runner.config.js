@@ -26,4 +26,9 @@ module.exports = {
         const html = fs.readFileSync("./framework/index.html", "utf8");
         return html.replace("${testFramework}", testFramework);
     },
+    testFramework: {
+        config: {
+            timeout: 10000,
+        },
+    },
 };
