@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { ClientKind } from "../types/client";
+import type { ClientKind, IClient } from "../types/client";
 
 // See https://github.com/matrix-org/complement/tree/master/internal/b
 type PredefinedBlueprint =
@@ -28,12 +28,12 @@ type PredefinedBlueprint =
     "perfManyMessages" |
     "perfManyRooms";
 
-export interface IComplementRequest {
+export interface IHomerunnerRequest {
     baseImageUri: string;
     blueprintName: PredefinedBlueprint;
 }
 
-interface IComplementHomeserverInfo {
+interface IHomerunnerHomeserverInfo {
     baseUrl: string;
     fedBaseUrl: string;
     containerId: string;
@@ -42,18 +42,19 @@ interface IComplementHomeserverInfo {
     };
 }
 
-export interface IComplementResponse {
+export interface IHomerunnerResponse {
     homeservers: {
-        [homeserverId: string]: IComplementHomeserverInfo;
+        [homeserverId: string]: IHomerunnerHomeserverInfo;
     };
     expires: string;
 }
 
 export interface IOrchestrationRequest {
-    servers: IComplementRequest;
+    servers: IHomerunnerRequest;
     clients: ClientKind | ClientKind[];
 }
 
 export interface IOrchestrationResponse {
-    servers: IComplementResponse;
+    servers: IHomerunnerResponse;
+    clients: IClient[];
 }

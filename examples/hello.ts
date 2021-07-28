@@ -28,7 +28,7 @@ import { ClientKind } from "@matrix-org/patience/types/client";
 it("displays 2 client frames", async function() {
     this.timeout(10000);
 
-    const { servers } = await orchestrate({
+    const { servers, clients } = await orchestrate({
         servers: {
             // TODO: Maybe default to this and avoid embedding in tests
             baseImageUri: "complement-dendrite",
@@ -36,7 +36,9 @@ it("displays 2 client frames", async function() {
         },
         clients: ClientKind.ElementWeb,
     });
-    console.log(servers);
+    console.log(servers, clients);
+
     expect(Object.keys(servers.homeservers.hs1.accessTokens).length).to.equal(2);
+    expect(clients.length).to.equal(2);
     expect(window.frames.length).to.equal(2);
 });

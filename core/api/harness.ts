@@ -20,56 +20,54 @@ import process from "process";
 
 import type { Plugin } from "@web/dev-server-core";
 
-import type { IComplementResponse, IOrchestrationRequest, IOrchestrationResponse } from "./rpc";
+import type { IHomerunnerRequest, IHomerunnerResponse } from "./rpc";
 import { camelToSnake, Data, fromHomerunner } from "./utils";
 
-// Needs `homerunner` from Complement, try running `go install ./cmd/homerunner`
-// in a Complement checkout.
-const HOMERUNNER_URL = "http://localhost:54321";
+let instance: Homerunner;
 
-let instance: Orchestrator;
-
-class Orchestrator {
+class Homerunner {
     private homerunnerProcess?: childProcess.ChildProcess;
 
-    static getInstance(): Orchestrator {
+    // Needs `homerunner` from Complement, try running `go install ./cmd/homerunner`
+    // in a Complement checkout.
+    private static homerunnerUrl = "http://localhost:54321";
+
+    static getInstance(): Homerunner {
         if (!instance) {
-            instance = new Orchestrator();
+            instance = new Homerunner();
         }
         return instance;
     }
 
-    async orchestrate(orReq: IOrchestrationRequest): Promise<IOrchestrationResponse> {
-        console.log(orReq.servers);
-        await this.startHomerunner();
+    async deploy(request: IHomerunnerRequest): Promise<IHomerunnerResponse> {
+        console.log(request);
+        await this.start();
 
-        const deployment = await new Promise<IComplementResponse>((resolve, reject) => {
-            const hrReq = http.request(`${HOMERUNNER_URL}/create`, {
+        const deployment = await new Promise<IHomerunnerResponse>((resolve, reject) => {
+            const httpReq = http.request(`${Homerunner.homerunnerUrl}/create`, {
                 method: "POST",
-            }, hrRes => {
-                hrRes.setEncoding("utf8");
-                hrRes.on("data", data => {
-                    if (hrRes.statusCode === 200) {
+            }, httpRes => {
+                httpRes.setEncoding("utf8");
+                httpRes.on("data", data => {
+                    if (httpRes.statusCode === 200) {
                         resolve(JSON.parse(data));
                     } else {
                         reject(new Error(JSON.parse(data).message));
                     }
                 });
             });
-            hrReq.write(JSON.stringify({
-                base_image_uri: orReq.servers.baseImageUri,
-                blueprint_name: camelToSnake(orReq.servers.blueprintName),
+            httpReq.write(JSON.stringify({
+                base_image_uri: request.baseImageUri,
+                blueprint_name: camelToSnake(request.blueprintName),
             }));
-            hrReq.end();
+            httpReq.end();
         });
 
-        return {
-            // Surely there's a more natural way to do this...
-            servers: fromHomerunner(deployment as unknown as Data) as unknown as IComplementResponse,
-        };
+        // Surely there's a more natural way to do this...
+        return fromHomerunner(deployment as unknown as Data) as unknown as IHomerunnerResponse;
     }
 
-    async startHomerunner() {
+    async start() {
         if (this.homerunnerProcess) {
             return;
         }
@@ -99,9 +97,9 @@ module.exports = {
         webSockets?.on("message", async ({ webSocket, data }) => {
             try {
                 const { type, request } = data;
-                if (type === "orchestrate") {
-                    const response = await Orchestrator.getInstance().orchestrate(
-                        request as IOrchestrationRequest,
+                if (type === "deploy") {
+                    const response = await Homerunner.getInstance().deploy(
+                        request as IHomerunnerRequest,
                     );
                     webSocket.send(JSON.stringify({
                         type: "message-response",

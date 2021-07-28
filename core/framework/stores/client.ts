@@ -14,16 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Instance, types } from "mobx-state-tree";
+import { Instance, SnapshotIn, SnapshotOrInstance, types } from "mobx-state-tree";
 import { ClientKind } from "../../types/client";
 
 const Client = types
     .model("Client", {
         id: types.identifier,
-        name: types.string,
+        homeserverUrl: types.string,
+        accessToken: types.string,
         kind: types.enumeration<ClientKind>(Object.values(ClientKind)),
         active: false,
     })
+    .views(self => ({
+        get name(): string {
+            return self.id.split("@")[1].split(":")[0]
+                .replace(/^[a-z]/, value => value.toUpperCase());
+        },
+    }))
     .actions(self => ({
         start() {
             self.active = true;
@@ -31,25 +38,18 @@ const Client = types
     }));
 
 export interface IClient extends Instance<typeof Client> { }
+export interface IClientSnapshotIn extends SnapshotIn<typeof Client> { }
 
 const ClientStore = types
     .model("ClientStore", {
         clients: types.array(Client),
-    });
+    })
+    .actions(self => ({
+        add(client: SnapshotOrInstance<typeof Client>) {
+            self.clients.push(client);
+        },
+    }));
 
 export interface IClientStore extends Instance<typeof ClientStore> { }
 
-export default ClientStore.create({
-    clients: [
-        {
-            id: "@alice:local",
-            name: "Alice (local)",
-            kind: ClientKind.ElementWeb,
-        },
-        {
-            id: "@bob:local",
-            name: "Bob (local)",
-            kind: ClientKind.ElementWeb,
-        },
-    ],
-});
+export default ClientStore.create();
