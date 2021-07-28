@@ -1,5 +1,7 @@
 const fs = require("fs");
 
+const proxy = require("koa-proxies");
+
 const snowpackPlugin = require("@snowpack/web-test-runner-plugin");
 const harnessPlugin = require("./api/harness");
 
@@ -17,6 +19,11 @@ module.exports = {
             }
             return next();
         },
+        proxy("/client/element-web", {
+            target: "https://develop.element.io",
+            changeOrigin: true,
+            rewrite: path => path.replace("/client/element-web", ""),
+        }),
     ],
     plugins: [
         snowpackPlugin(),
