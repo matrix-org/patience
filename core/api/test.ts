@@ -34,7 +34,7 @@ export async function orchestrate(request: IOrchestrationRequest): Promise<IOrch
         const homeserverUrl = server.baseUrl;
         for (const [userId, accessToken] of Object.entries(server.accessTokens)) {
             const client: IClientSnapshotIn = {
-                id: userId,
+                userId,
                 homeserverUrl,
                 accessToken,
                 // TODO: Support arrays as well

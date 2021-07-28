@@ -19,7 +19,7 @@ import { ClientKind } from "../../types/client";
 
 const Client = types
     .model("Client", {
-        id: types.identifier,
+        userId: types.identifier,
         homeserverUrl: types.string,
         accessToken: types.string,
         kind: types.enumeration<ClientKind>(Object.values(ClientKind)),
@@ -27,7 +27,7 @@ const Client = types
     })
     .views(self => ({
         get name(): string {
-            return self.id.split("@")[1].split(":")[0]
+            return self.userId.split("@")[1].split(":")[0]
                 .replace(/^[a-z]/, value => value.toUpperCase());
         },
     }))

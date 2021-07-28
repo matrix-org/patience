@@ -24,7 +24,7 @@ const ElementWebFrame: FunctionComponent<{ client: IClient }> = observer(({ clie
     const location = client.active ? "/client/element-web/" : "about:blank";
 
     return <div className="client-frame">
-        <div className="client-frame-name">{client.name} ({client.id})</div>
+        <div className="client-frame-name">{client.name} ({client.userId})</div>
         <div className="client-frame-frame">
             <iframe src={location}></iframe>
         </div>
