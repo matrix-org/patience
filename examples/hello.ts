@@ -43,5 +43,11 @@ it("displays 2 client frames", async function() {
 
 it("logs into both clients", async function() {
     await clients[0].start();
-    await clients[0].login();
+    // TODO: For some reason, without this sleep between clients, both clients
+    // get very strange responses from the homeserver, such as user is not in
+    // the room, etc.
+    new Promise(resolve => {
+        setTimeout(resolve, 1000);
+    });
+    await clients[1].start();
 });

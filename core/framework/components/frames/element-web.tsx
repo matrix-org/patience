@@ -21,7 +21,7 @@ import { observer } from "mobx-react";
 import type { IClient } from "../../stores/client";
 
 const ElementWebFrame: FunctionComponent<{ client: IClient }> = observer(({ client }) => {
-    const location = client.active ? "/client/element-web/" : "about:blank";
+    const location = client.active ? "/client/element-web/#/home" : "about:blank";
 
     return <div className="client-frame">
         <div className="client-frame-name">{client.name} ({client.userId})</div>

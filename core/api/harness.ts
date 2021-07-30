@@ -72,7 +72,11 @@ class Homerunner {
             return;
         }
 
-        this.homerunnerProcess = await childProcess.spawn("homerunner");
+        this.homerunnerProcess = await childProcess.spawn("homerunner", {
+            env: Object.assign({
+                HOMERUNNER_LIFETIME_MINS: "120",
+            }, process.env),
+        });
         process.on("exit", () => {
             this.homerunnerProcess?.kill();
         });
