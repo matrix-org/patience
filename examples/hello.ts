@@ -21,6 +21,8 @@ import { expect } from "chai";
 import { orchestrate } from "@matrix-org/patience";
 import { ClientKind } from "@matrix-org/patience/types/client";
 
+import { sleep } from "./utils";
+
 // Integrate both client and server config, like an extended form of Complement
 // Would be nice if clients could use snapshotted sessions, rather than needing
 // to login for each test.
@@ -52,4 +54,9 @@ it("has a conversation", async function() {
     await bob.waitForRoom();
     await alice.viewRoom();
     await bob.viewRoom();
+
+    await alice.sendMessage("Hi Bob!");
+    // TODO: Perhaps even this should be recorded as an action...?
+    await sleep(500);
+    await bob.sendMessage("Hello Alice!");
 });

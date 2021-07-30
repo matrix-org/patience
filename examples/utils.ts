@@ -14,21 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { ClientKind, IClient } from "../../types/client";
-import ElementWebAdapter from "./element-web";
-
-export interface IClientAdapter {
-    model: IClient;
-    start(): Promise<void>;
-    stop(): Promise<void>;
-    waitForRoom(): Promise<void>;
-    viewRoom(roomId?: string): Promise<void>;
-    sendMessage(message: string): Promise<void>;
-}
-
-export default function getAdapterForClient(client: IClient): IClientAdapter {
-    switch (client.kind) {
-        case ClientKind.ElementWeb:
-            return new ElementWebAdapter(client);
-    }
+export function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
 }

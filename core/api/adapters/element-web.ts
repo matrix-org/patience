@@ -58,6 +58,14 @@ interface IAppWindow extends Window {
     mxMatrixClientPeg: {
         get(): IMatrixClient;
     };
+    MouseEvent: {
+        prototype: MouseEvent;
+        new(type: string, eventInitDict?: MouseEventInit): MouseEvent;
+    };
+    KeyboardEvent: {
+        prototype: KeyboardEvent;
+        new(type: string, eventInitDict?: KeyboardEventInit): KeyboardEvent;
+    };
 }
 
 let idb: IDBDatabase;
@@ -177,6 +185,59 @@ export default class ElementWebAdapter implements IClientAdapter {
             action: "view_room",
             room_id: roomId,
         }, true);
+    }
+
+    public async sendMessage(message: string): Promise<void> {
+        const composer = await this.query(".mx_SendMessageComposer");
+        this.click(composer);
+        this.fill(composer, message);
+        this.press(composer, "Enter");
+        await this.query(".mx_EventTile_last:not(.mx_EventTile_sending)");
+    }
+
+    private async query(selector: string): Promise<Element> {
+        return new Promise<Element>(resolve => {
+            const waitLoop = setInterval(() => {
+                const element = this.appWindow.document.querySelector(selector);
+                if (!element) {
+                    return;
+                }
+                clearInterval(waitLoop);
+                resolve(element);
+            }, 50);
+        });
+    }
+
+    private click(element: Element) {
+        const rect = element.getBoundingClientRect();
+        const MouseEvent = this.appWindow.MouseEvent;
+        const event = new MouseEvent("click", {
+            clientX: rect.left + rect.width / 2,
+            clientY: rect.top + rect.height / 2,
+            bubbles: true,
+            cancelable: true,
+        });
+        element.dispatchEvent(event);
+    }
+
+    private fill(element: Element, message: string) {
+        element.ownerDocument.execCommand("insertText", false, message);
+    }
+
+    private press(element: Element, key: string) {
+        const KeyboardEvent = this.appWindow.KeyboardEvent;
+        const down = new KeyboardEvent("keydown", {
+            key,
+            bubbles: true,
+            cancelable: true,
+        });
+        element.dispatchEvent(down);
+        const up = new KeyboardEvent("keyup", {
+            key,
+            bubbles: true,
+            cancelable: true,
+        });
+        element.dispatchEvent(up);
     }
 
     private async clearStorage(): Promise<void> {
