@@ -16,6 +16,7 @@ limitations under the License.
 
 import type { IClientAdapter } from ".";
 import type { IClient } from "../../types/client";
+import { sleep } from "./utils";
 
 interface IMatrixClientCreds {
     userId: string;
@@ -145,6 +146,11 @@ export default class ElementWebAdapter implements IClientAdapter {
 
         // Clear local storage for future use by other sessions
         await this.clearStorage();
+
+        // TODO: For some reason, without this sleep between clients, both clients
+        // get very strange responses from the homeserver, such as user is not in
+        // the room, etc.
+        await sleep(1000);
     }
 
     public async stop(): Promise<void> {
