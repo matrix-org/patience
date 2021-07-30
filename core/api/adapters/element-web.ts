@@ -34,14 +34,28 @@ interface IMatrixChat {
 
 interface IActionPayload {
     action: string;
+    [key: string]: string;
+}
+
+interface IDispatcher {
+    register(callback: (action: IActionPayload) => void): string;
+    unregister(id: string): void;
+    dispatch(action: IActionPayload, sync?: boolean): void;
+}
+
+interface IMatrixRoom {
+    roomId: string;
+}
+
+interface IMatrixClient {
+    getRooms(): IMatrixRoom[];
 }
 
 interface IAppWindow extends Window {
     matrixChat: IMatrixChat;
-    mxDispatcher: {
-        register(callback: (action: IActionPayload) => void): string;
-        unregister(id: string): void;
-        dispatch(action: IActionPayload, sync?: boolean): void;
+    mxDispatcher: IDispatcher;
+    mxMatrixClientPeg: {
+        get(): IMatrixClient;
     };
 }
 
@@ -90,6 +104,14 @@ export default class ElementWebAdapter implements IClientAdapter {
         return window[this.model.userId].contentWindow;
     }
 
+    private get dispatcher(): IDispatcher {
+        return this.appWindow.mxDispatcher;
+    }
+
+    private get matrixClient(): IMatrixClient {
+        return this.appWindow.mxMatrixClientPeg.get();
+    }
+
     public async start(): Promise<void> {
         const { userId, homeserverUrl, accessToken } = this.model;
 
@@ -103,18 +125,18 @@ export default class ElementWebAdapter implements IClientAdapter {
             let dispatcherRef: string;
             const startupWaitLoop = setInterval(() => {
                 // Wait until the dispatcher appears
-                if (!this.appWindow.mxDispatcher) {
+                if (!this.dispatcher) {
                     return;
                 }
                 clearInterval(startupWaitLoop);
-                dispatcherRef = this.appWindow.mxDispatcher.register(onAction);
+                dispatcherRef = this.dispatcher.register(onAction);
             }, 50);
             const onAction = ({ action }: IActionPayload) => {
                 // Wait until the app has processed the stored login
                 if (action !== "on_logged_in") {
                     return;
                 }
-                this.appWindow.mxDispatcher.unregister(dispatcherRef);
+                this.dispatcher.unregister(dispatcherRef);
                 resolve();
             };
             // Load the client
@@ -126,7 +148,29 @@ export default class ElementWebAdapter implements IClientAdapter {
     }
 
     public async stop(): Promise<void> {
-        this.appWindow.mxDispatcher.dispatch({ action: "logout" }, true);
+        this.dispatcher.dispatch({ action: "logout" }, true);
+    }
+
+    public async waitForRoom(): Promise<void> {
+        await new Promise<void>(resolve => {
+            const waitLoop = setInterval(() => {
+                if (!this.matrixClient.getRooms().length) {
+                    return;
+                }
+                clearInterval(waitLoop);
+                resolve();
+            }, 50);
+        });
+    }
+
+    public async viewRoom(roomId?: string): Promise<void> {
+        if (!roomId) {
+            roomId = this.matrixClient.getRooms()[0].roomId;
+        }
+        this.dispatcher.dispatch({
+            action: "view_room",
+            room_id: roomId,
+        }, true);
     }
 
     private async clearStorage(): Promise<void> {

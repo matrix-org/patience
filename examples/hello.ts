@@ -34,8 +34,8 @@ const { servers, clients } = await orchestrate({
     clients: ClientKind.ElementWeb,
 });
 console.log(servers, clients);
-window.alice = clients[0];
-window.bob = clients[1];
+const alice = window.alice = clients[0];
+const bob = window.bob = clients[1];
 
 it("displays 2 client frames", async function() {
     expect(Object.keys(servers.homeservers.hs1.accessTokens).length).to.equal(2);
@@ -44,12 +44,19 @@ it("displays 2 client frames", async function() {
 });
 
 it("logs into both clients", async function() {
-    await clients[0].start();
+    await alice.start();
     // TODO: For some reason, without this sleep between clients, both clients
     // get very strange responses from the homeserver, such as user is not in
     // the room, etc.
     new Promise(resolve => {
         setTimeout(resolve, 1000);
     });
-    await clients[1].start();
+    await bob.start();
+});
+
+it("has a conversation", async function() {
+    await alice.waitForRoom();
+    await bob.waitForRoom();
+    await alice.viewRoom();
+    await bob.viewRoom();
 });
