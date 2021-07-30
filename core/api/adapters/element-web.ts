@@ -28,7 +28,11 @@ interface IMatrixClientCreds {
     freshLogin?: boolean;
 }
 
-export interface IActionPayload {
+interface IMatrixChat {
+    onUserCompletedLoginFlow(creds: IMatrixClientCreds): Promise<void>;
+}
+
+interface IActionPayload {
     action: string;
 }
 
@@ -37,11 +41,8 @@ interface IAppWindow extends Window {
     mxDispatcher: {
         register(callback: (action: IActionPayload) => void): string;
         unregister(id: string): void;
+        dispatch(action: IActionPayload, sync?: boolean): void;
     };
-}
-
-interface IMatrixChat {
-    onUserCompletedLoginFlow(creds: IMatrixClientCreds): Promise<void>;
 }
 
 let idb: IDBDatabase;
@@ -89,7 +90,7 @@ export default class ElementWebAdapter implements IClientAdapter {
         return window[this.model.userId].contentWindow;
     }
 
-    async start(): Promise<void> {
+    public async start(): Promise<void> {
         const { userId, homeserverUrl, accessToken } = this.model;
 
         // Inject login details via local storage
@@ -116,11 +117,16 @@ export default class ElementWebAdapter implements IClientAdapter {
                 this.appWindow.mxDispatcher.unregister(dispatcherRef);
                 resolve();
             };
+            // Load the client
             this.model.start();
         });
 
         // Clear local storage for future use by other sessions
         await this.clearStorage();
+    }
+
+    public async stop(): Promise<void> {
+        this.appWindow.mxDispatcher.dispatch({ action: "logout" }, true);
     }
 
     private async clearStorage(): Promise<void> {

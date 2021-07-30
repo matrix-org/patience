@@ -20,6 +20,7 @@ import ElementWebAdapter from "./element-web";
 export interface IClientAdapter {
     model: IClient;
     start(): Promise<void>;
+    stop(): Promise<void>;
 }
 
 export default function getAdapterForClient(client: IClient): IClientAdapter {
