@@ -25,8 +25,6 @@ import { sleep } from "./utils";
 
 const { servers, clients } = await orchestrate({
     servers: {
-        // TODO: Maybe default to this and avoid embedding in tests
-        baseImageUri: "complement-dendrite",
         blueprintName: "oneToOneRoom",
     },
     clients: ClientKind.ElementWeb,

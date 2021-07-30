@@ -30,7 +30,7 @@ type PredefinedBlueprint =
     "perfManyRooms";
 
 export interface IHomerunnerRequest {
-    baseImageUri: string;
+    baseImageUri?: string;
     blueprintName: PredefinedBlueprint;
 }
 

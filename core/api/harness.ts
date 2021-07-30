@@ -60,7 +60,7 @@ class Homerunner {
                 });
             });
             httpReq.write(JSON.stringify({
-                base_image_uri: request.baseImageUri,
+                base_image_uri: request.baseImageUri || "complement-dendrite",
                 blueprint_name: camelToSnake(request.blueprintName),
             }));
             httpReq.end();
