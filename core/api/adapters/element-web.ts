@@ -124,6 +124,9 @@ export default class ElementWebAdapter implements IClientAdapter {
     public async start(): Promise<void> {
         const { userId, homeserverUrl, accessToken } = this.model;
 
+        // TODO: Would be nice if clients could use snapshotted sessions, rather
+        // than needing to login for each test.
+
         // Inject login details via local storage
         await this.clearStorage();
         localStorage.setItem("mx_user_id", userId);

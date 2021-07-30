@@ -23,10 +23,6 @@ import { ClientKind } from "@matrix-org/patience/types/client";
 
 import { sleep } from "./utils";
 
-// Integrate both client and server config, like an extended form of Complement
-// Would be nice if clients could use snapshotted sessions, rather than needing
-// to login for each test.
-
 const { servers, clients } = await orchestrate({
     servers: {
         // TODO: Maybe default to this and avoid embedding in tests
