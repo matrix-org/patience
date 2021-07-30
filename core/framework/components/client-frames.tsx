@@ -22,10 +22,19 @@ import type { IClient, IClientStore } from "../stores/client";
 import getFrameForClient from "./frames";
 
 const ClientFrames: FunctionComponent<{ store: IClientStore }> = observer(({ store }) => {
-    return <div className="client-frames">
-        {store.clients.map((client: IClient) => {
+    let frames;
+    if (store.clients.length) {
+        frames = store.clients.map((client: IClient) => {
             return h(getFrameForClient(client), { client });
-        })}
+        });
+    } else {
+        frames = <div className="client-frames-waiting">
+            Waiting for clients...
+        </div>;
+    }
+
+    return <div className="client-frames">
+        {frames}
     </div>;
 });
 

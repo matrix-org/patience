@@ -24,6 +24,13 @@ body {
 
 .client-frames {
     display: flex;
+    min-height: 400px;
+    align-items: center;
+}
+
+.client-frames-waiting {
+    flex: 1;
+    text-align: center;
 }
 
 .client-frame {
