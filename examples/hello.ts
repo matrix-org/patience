@@ -34,6 +34,8 @@ const { servers, clients } = await orchestrate({
     clients: ClientKind.ElementWeb,
 });
 console.log(servers, clients);
+window.alice = clients[0];
+window.bob = clients[1];
 
 it("displays 2 client frames", async function() {
     expect(Object.keys(servers.homeservers.hs1.accessTokens).length).to.equal(2);

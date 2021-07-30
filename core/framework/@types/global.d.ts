@@ -27,5 +27,7 @@ declare global {
     interface Window {
         store: IClientStore;
         clients: IClientAdapter[];
+        alice?: IClientAdapter;
+        bob?: IClientAdapter;
     }
 }
