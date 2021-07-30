@@ -19,9 +19,12 @@ import http from "http";
 import process from "process";
 
 import type { Plugin } from "@web/dev-server-core";
+import debug from "debug";
 
 import type { IHomerunnerRequest, IHomerunnerResponse } from "./rpc";
 import { camelToSnake, Data, fromHomerunner } from "./utils";
+
+const log = debug("harness");
 
 let instance: Homerunner;
 
@@ -40,7 +43,7 @@ class Homerunner {
     }
 
     async deploy(request: IHomerunnerRequest): Promise<IHomerunnerResponse> {
-        console.log(request);
+        log(request);
         await this.start();
 
         const deployment = await new Promise<IHomerunnerResponse>((resolve, reject) => {
@@ -84,9 +87,9 @@ class Homerunner {
         await new Promise<void>(resolve => {
             this.homerunnerProcess?.stderr?.setEncoding("utf8");
             this.homerunnerProcess?.stderr?.on("data", data => {
-                console.log(data);
+                log(data);
                 if (data.includes("Homerunner listening")) {
-                    console.log("Homerunner started");
+                    log("Homerunner started");
                     resolve();
                 }
             });

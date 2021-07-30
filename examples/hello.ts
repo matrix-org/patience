@@ -33,7 +33,6 @@ const { servers, clients } = await orchestrate({
     },
     clients: ClientKind.ElementWeb,
 });
-console.log(servers, clients);
 const alice = window.alice = clients[0];
 const bob = window.bob = clients[1];
 
