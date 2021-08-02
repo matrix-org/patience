@@ -122,6 +122,8 @@ export default class ElementWebAdapter implements IClientAdapter {
     }
 
     public async start(): Promise<void> {
+        this.model.act("start");
+
         const { userId, homeserverUrl, accessToken } = this.model;
 
         // TODO: Would be nice if clients could use snapshotted sessions, rather
@@ -165,10 +167,12 @@ export default class ElementWebAdapter implements IClientAdapter {
     }
 
     public async stop(): Promise<void> {
+        this.model.act("stop");
         this.dispatcher.dispatch({ action: "logout" }, true);
     }
 
     public async waitForRoom(): Promise<void> {
+        this.model.act("waitForRoom");
         await new Promise<void>(resolve => {
             const waitLoop = setInterval(() => {
                 if (!this.matrixClient.getRooms().length) {
@@ -181,6 +185,7 @@ export default class ElementWebAdapter implements IClientAdapter {
     }
 
     public async viewRoom(roomId?: string): Promise<void> {
+        this.model.act("viewRoom", roomId);
         if (!roomId) {
             roomId = this.matrixClient.getRooms()[0].roomId;
         }
@@ -191,6 +196,7 @@ export default class ElementWebAdapter implements IClientAdapter {
     }
 
     public async sendMessage(message: string): Promise<void> {
+        this.model.act("sendMessage", message);
         const composer = await this.query(".mx_SendMessageComposer");
         this.click(composer);
         this.fill(composer, message);

@@ -18,26 +18,21 @@ import { h } from "preact";
 import type { FunctionComponent } from "preact";
 import { observer } from "mobx-react";
 
-import type { IClient, IClientStore } from "../stores/client";
-import getFrameForClient from "./frames";
+import type { IAction, ITimeline } from "../stores/timeline";
 
-const ClientFrames: FunctionComponent<{
-    clientStore: IClientStore;
-}> = observer(({ clientStore }) => {
-    let frames;
-    if (clientStore.clients.length) {
-        frames = clientStore.clients.map((client: IClient) => {
-            return h(getFrameForClient(client), { client });
-        });
-    } else {
-        frames = <div className="client-frames-waiting">
-            Waiting for clients...
-        </div>;
-    }
-
-    return <div className="client-frames">
-        {frames}
+const Timeline: FunctionComponent<{
+    timeline: ITimeline;
+}> = observer(({ timeline }) => {
+    return <div className="timeline">
+        <div className="timeline-header">Timeline</div>
+        <div className="timeline-grid">
+            {timeline.actions.map((action: IAction, index: number) => (
+                <div className="timeline-action" style={{ gridRow: index + 1, gridColumn: action.clientIndex + 1 }}>
+                    {action.clientName}: {action.type} {action.value}
+                </div>
+            ))}
+        </div>
     </div>;
 });
 
-export default ClientFrames;
+export default Timeline;

@@ -61,3 +61,16 @@ body {
     width: 100%;
     border: 1px solid;
 }
+
+.timeline {
+    margin-block-start: 16px;
+}
+
+.timeline-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-block-start: 8px;
+    padding: 8px;
+    row-gap: 4px;
+    border: 1px solid;
+}

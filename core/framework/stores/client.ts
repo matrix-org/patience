@@ -14,10 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Instance, SnapshotIn, SnapshotOrInstance, types } from "mobx-state-tree";
-import { ClientKind } from "../../types/client";
+import { cast, Instance, SnapshotIn, SnapshotOrInstance, types } from "mobx-state-tree";
 
-const Client = types
+import { ClientKind } from "../../types/client";
+import timeline from "./timeline";
+
+export const Client = types
     .model("Client", {
         userId: types.identifier,
         homeserverUrl: types.string,
@@ -34,6 +36,10 @@ const Client = types
     .actions(self => ({
         start() {
             self.active = true;
+        },
+        act(type: string, value?: string) {
+            const index = window.clientStore.clients.indexOf(cast(self));
+            timeline.add(self.name, index, type, value);
         },
     }));
 

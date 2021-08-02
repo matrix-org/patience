@@ -34,14 +34,27 @@ import { observer } from "mobx-react";
 
 import ClientFrames from "./components/client-frames";
 import type { IClientStore } from "./stores/client";
-import store from "./stores/client";
+import clientStore from "./stores/client";
+import type { ITimeline } from "./stores/timeline";
+import timeline from "./stores/timeline";
+import Timeline from "./components/timeline";
 
-const App: FunctionComponent<{ store: IClientStore }> = observer(({ store }) => {
+const App: FunctionComponent<{
+    clientStore: IClientStore;
+    timeline: ITimeline;
+}> = observer(({ clientStore, timeline }) => {
     return <>
-        <ClientFrames store={store} />
+        <ClientFrames clientStore={clientStore} />
+        <Timeline timeline={timeline} />
     </>;
 });
 
-render(<App store={store} />, document.body);
+render(<App
+    clientStore={clientStore}
+    timeline={timeline}
+/>, document.body);
 
-window.store = store;
+// The test API uses this as a way of notifying the test framework without
+// importing the framework itself into the test.
+window.clientStore = clientStore;
+window.timeline = timeline;

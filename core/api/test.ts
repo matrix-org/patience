@@ -42,13 +42,15 @@ export async function orchestrate(request: IOrchestrationRequest): Promise<IOrch
                 kind: request.clients as ClientKind,
             };
             // Add them to the harness UI
-            window.store.add(client);
+            window.clientStore.add(client);
         }
     }
 
     // TODO: This will return _all_ clients if this function is called more than
     // once per test.
-    const clients = window.store.clients.map(cli => getAdapterForClient(cli));
+    // We're using globals via `window` as a way of notifying the test framework
+    // without importing the framework itself into the test.
+    const clients = window.clientStore.clients.map(cli => getAdapterForClient(cli));
     window.clients = clients;
 
     return {

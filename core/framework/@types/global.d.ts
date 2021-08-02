@@ -16,6 +16,7 @@ limitations under the License.
 
 import type { IClientAdapter } from "../../api/adapters";
 import type { IClientStore } from "../stores/client";
+import type { ITimeline } from "../stores/timeline";
 
 declare global {
     interface ImportMeta {
@@ -25,7 +26,8 @@ declare global {
     }
 
     interface Window {
-        store: IClientStore;
+        clientStore: IClientStore;
+        timeline: ITimeline;
         clients: IClientAdapter[];
         alice?: IClientAdapter;
         bob?: IClientAdapter;
