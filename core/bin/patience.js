@@ -29,6 +29,9 @@ childProcess.spawnSync("npx", [
     testRunnerBinPath,
     // Tests to run, e.g. `*.ts`
     path.join(cwd, process.argv[2]),
+    // TODO: Work out the best way to manage parallel orchestration
+    "--concurrency",
+    "1",
     // Any remaining args are passed through
     ...process.argv.slice(3),
 ], {

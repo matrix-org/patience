@@ -21,7 +21,7 @@ import { expect } from "chai";
 import { orchestrate } from "@matrix-org/patience";
 import { ClientKind } from "@matrix-org/patience/types/client";
 
-import { sleep } from "./utils";
+import sleep from "./utils/sleep";
 
 const { clients } = await orchestrate({
     servers: {
