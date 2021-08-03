@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import type { EventEmitter } from "events";
+
 import type { IClientAdapter } from ".";
 import type { IClient } from "../../types/client";
 import { sleep } from "./utils";
@@ -48,7 +50,7 @@ interface IMatrixRoom {
     roomId: string;
 }
 
-interface IMatrixClient {
+interface IMatrixClient extends EventEmitter {
     getRooms(): IMatrixRoom[];
 }
 
@@ -202,6 +204,19 @@ export default class ElementWebAdapter implements IClientAdapter {
         this.fill(composer, message);
         this.press(composer, "Enter");
         await this.query(".mx_EventTile_last:not(.mx_EventTile_sending)");
+    }
+
+    public async waitForMessage(): Promise<string> {
+        // TODO: Maybe we should have generic tracing spans...?
+        this.model.act("waitForMessage");
+        const start = performance.now();
+        const message: string = await new Promise(resolve => {
+            this.matrixClient.once("Room.timeline", event => {
+                resolve(event.getContent().body);
+            });
+        });
+        this.model.act("waitedForMessage", `${performance.now() - start} ms`);
+        return message;
     }
 
     private async query(selector: string): Promise<Element> {

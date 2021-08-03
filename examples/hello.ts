@@ -21,8 +21,6 @@ import { expect } from "chai";
 import { orchestrate } from "@matrix-org/patience";
 import { ClientKind } from "@matrix-org/patience/types/client";
 
-import sleep from "./utils/sleep";
-
 const { servers, clients } = await orchestrate({
     servers: {
         blueprintName: "oneToOneRoom",
@@ -49,8 +47,8 @@ it("has a conversation", async function() {
     await alice.viewRoom();
     await bob.viewRoom();
 
+    const bobWaitsForMessage = bob.waitForMessage();
     await alice.sendMessage("Hi Bob!");
-    // TODO: Perhaps even this should be recorded as an action...?
-    await sleep(500);
+    expect(await bobWaitsForMessage).to.equal("Hi Bob!");
     await bob.sendMessage("Hello Alice!");
 });
