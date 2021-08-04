@@ -26,6 +26,7 @@ export const Client = types
         accessToken: types.string,
         kind: types.enumeration<ClientKind>(Object.values(ClientKind)),
         active: false,
+        zoom: 100,
     })
     .views(self => ({
         get name(): string {
@@ -36,6 +37,9 @@ export const Client = types
     .actions(self => ({
         start() {
             self.active = true;
+        },
+        setZoom(value: number) {
+            self.zoom = value;
         },
         act(type: string, value?: string) {
             const index = window.clientStore.clients.indexOf(cast(self));

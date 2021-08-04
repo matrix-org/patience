@@ -38,6 +38,7 @@ body {
     display: flex;
     flex-direction: column;
     margin-inline: 4px;
+    max-width: 50%;
 }
 
 .client-frame:first-child {
@@ -48,18 +49,33 @@ body {
     margin-inline-end: 0;
 }
 
-.client-frame-name {
+.client-frame-header {
     margin-block-end: 8px;
+}
+
+.client-frame-header > * {
+    margin-inline-end: 8px;
+}
+
+.client-frame-zoom button {
+    margin-inline-end: 4px;
+}
+
+.client-frame-zoom button.selected {
+    font-weight: bold;
 }
 
 .client-frame-frame {
     min-height: 400px;
+    overflow: hidden;
+    border: 1px solid;
+    box-sizing: content-box;
 }
 
 .client-frame-frame > * {
     height: 100%;
     width: 100%;
-    border: 1px solid;
+    border: none;
 }
 
 .timeline {
