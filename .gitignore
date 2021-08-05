@@ -1,4 +1,5 @@
 .DS_Store
+.npmrc
 build
 ca
 node_modules
