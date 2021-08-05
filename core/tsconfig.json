@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "es2020",
+        "moduleResolution": "node",
+        "jsx": "preserve",
+        "jsxFactory": "h",
+        "jsxFragmentFactory": "Fragment",
+        "noEmit": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "importsNotUsedAsValues": "error",
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        "compilerOptions": {
+            "module": "commonjs",
+        },
+    },
+}
