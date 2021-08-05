@@ -26,6 +26,7 @@ const testRunnerBinPath = require.resolve("@web/test-runner")
 
 childProcess.spawnSync("npx", [
     "ts-node",
+    "--cwd-mode",
     testRunnerBinPath,
     // Tests to run, e.g. `*.ts`
     path.join(cwd, process.argv[2]),
