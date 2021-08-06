@@ -3,6 +3,7 @@
         "module": "esnext",
         "target": "es2020",
         "outDir": "lib",
+        "declaration": true,
         "moduleResolution": "node",
         "jsx": "preserve",
         "jsxFactory": "h",
