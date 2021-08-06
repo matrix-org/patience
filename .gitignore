@@ -2,4 +2,5 @@
 .npmrc
 build
 ca
+lib
 node_modules
