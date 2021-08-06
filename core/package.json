@@ -12,7 +12,7 @@
     "scripts": {
         "start": "snowpack dev",
         "type": "tsc --noEmit",
-        "lint": "eslint .",
+        "lint": "eslint --ignore-path ../.gitignore .",
         "build": "tsc",
         "prepublishOnly": "npm run build"
     },
