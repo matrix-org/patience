@@ -24,7 +24,7 @@ const cwd = process.cwd();
 const testRunnerBinPath = require.resolve("@web/test-runner")
     .replace(/test-runner.*$/, "test-runner/dist/bin.js");
 
-childProcess.spawnSync("npx", [
+const { status } = childProcess.spawnSync("npx", [
     "ts-node",
     "--cwd-mode",
     testRunnerBinPath,
@@ -44,3 +44,4 @@ childProcess.spawnSync("npx", [
         PATIENCE_TEST_DIR: cwd,
     }, process.env),
 });
+process.exitCode = status;
