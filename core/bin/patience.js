@@ -29,6 +29,7 @@ const { status } = childProcess.spawnSync("npx", [
     "--cwd-mode",
     testRunnerBinPath,
     // Tests to run, e.g. `*.ts`
+    // TODO: Handle multiple file paths or provide a nice error message
     path.join(cwd, process.argv[2]),
     // TODO: Work out the best way to manage parallel orchestration
     "--concurrency",

@@ -51,7 +51,7 @@ test. Most likely you'll want to actually test something too.
 
 To run your tests in reporting mode:
 
-`npx patience *.ts`
+`npx patience '*.ts'`
 
 You should see:
 
@@ -61,7 +61,7 @@ Finished running tests, all tests passed! 🎉
 
 To run your tests in interactive mode:
 
-`npx patience *.ts -- --manual`
+`npx patience '*.ts' -- --manual`
 
 This will start a server at `localhost:8000` which you can navigate to in your
 browser. Click on one of listed test files to watch the test run. You can
