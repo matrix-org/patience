@@ -24,25 +24,30 @@ const cwd = process.cwd();
 const testRunnerBinPath = require.resolve("@web/test-runner")
     .replace(/test-runner.*$/, "test-runner/dist/bin.js");
 
-const { status } = childProcess.spawnSync("npx", [
-    "ts-node",
-    "--cwd-mode",
-    testRunnerBinPath,
-    // Tests to run, e.g. `*.ts`
-    // TODO: Handle multiple file paths or provide a nice error message
-    path.join(cwd, process.argv[2]),
-    // TODO: Work out the best way to manage parallel orchestration
-    "--concurrency",
-    "1",
-    // Any remaining args are passed through
-    ...process.argv.slice(3),
-], {
-    stdio: "inherit",
-    // Run as if we're in the core directory
-    cwd: path.dirname(require.resolve("@matrix-org/patience/package.json")),
-    // Expose test directory for referencing in the Snowpack config
-    env: Object.assign({
-        PATIENCE_TEST_DIR: cwd,
-    }, process.env),
-});
-process.exitCode = status;
+try {
+    const result = childProcess.spawnSync("npx", [
+        "ts-node",
+        "--cwd-mode",
+        testRunnerBinPath,
+        // Tests to run, e.g. `*.ts`
+        // TODO: Handle multiple file paths or provide a nice error message
+        path.join(cwd, process.argv[2]),
+        // TODO: Work out the best way to manage parallel orchestration
+        "--concurrency",
+        "1",
+        // Any remaining args are passed through
+        ...process.argv.slice(3),
+    ], {
+        stdio: "inherit",
+        // Run as if we're in the core directory
+        cwd: path.dirname(require.resolve("@matrix-org/patience/package.json")),
+        // Expose test directory for referencing in the Snowpack config
+        env: Object.assign({
+            PATIENCE_TEST_DIR: cwd,
+        }, process.env),
+    });
+    process.exitCode = result.status;
+} catch (e) {
+    console.error(e);
+    process.exitCode = 1;
+}
