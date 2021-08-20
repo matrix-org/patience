@@ -75,21 +75,27 @@ class Homerunner {
             return;
         }
 
-        this.homerunnerProcess = await childProcess.spawn("homerunner", {
-            env: Object.assign({
-                HOMERUNNER_LIFETIME_MINS: "120",
-            }, process.env),
-        });
-        process.on("exit", () => {
-            this.homerunnerProcess?.kill();
-        });
+        try {
+            this.homerunnerProcess = await childProcess.spawn("homerunner", {
+                env: Object.assign({
+                    HOMERUNNER_LIFETIME_MINS: "120",
+                }, process.env),
+            });
+            process.on("exit", () => {
+                this.homerunnerProcess?.kill();
+            });
+        } catch (e) {
+            console.error("Failed to start Homerunner", e);
+            throw e;
+        }
 
+        log("Waiting for Homerunner to listen...");
         await new Promise<void>(resolve => {
             this.homerunnerProcess?.stderr?.setEncoding("utf8");
             this.homerunnerProcess?.stderr?.on("data", data => {
                 log(data);
                 if (data.includes("Homerunner listening")) {
-                    log("Homerunner started");
+                    log("Homerunner listening");
                     resolve();
                 }
             });
