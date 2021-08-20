@@ -2,7 +2,6 @@ name: CI
 
 on:
     push:
-        branches: [main]
     pull_request:
         branches: [main]
 
@@ -29,3 +28,72 @@ jobs:
 
             - name: Type
               run: npm run type -w core
+
+    test:
+        runs-on: ubuntu-latest
+        container:
+            image: ghcr.io/matrix-org/patience:latest
+            env:
+                DOCKER_BUILDKIT: 1
+            ports:
+                - 8448:8448
+            volumes:
+                - /var/run/docker.sock:/var/run/docker.sock
+        steps:
+            - name: Checkout Patience
+              uses: actions/checkout@v2
+
+            - name: Change ownership to match container user
+              run: chown -R root:root .
+
+            - name: Install Node
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 14
+                  cache: npm
+
+            - name: Update npm
+              run: npm install -g npm@7
+
+            - name: Install modules
+              run: npm install
+
+            - name: Build
+              run: npm run build -w core
+
+            - name: Checkout Complement
+              uses: actions/checkout@v2
+              with:
+                  repository: jryans/complement
+                  ref: debug-certs
+                  path: complement
+
+            - name: Install Homerunner
+              working-directory: ./complement
+              run: go install ./cmd/homerunner
+
+            - name: Build homeserver image
+              working-directory: ./complement/dockerfiles
+              run: docker build -t complement-dendrite -f Dendrite.Dockerfile .
+
+            - name: Make test project directory
+              working-directory: ${{ runner.temp }}
+              run: |
+                  mkdir test-project
+                  chown root:root test-project
+                  chmod 777 test-project
+
+            - name: Create test project
+              working-directory: ${{ runner.temp }}/test-project
+              run: |
+                  npm add $GITHUB_WORKSPACE/core --save-dev
+                  cp $GITHUB_WORKSPACE/examples/*.ts .
+
+            - name: Test
+              working-directory: ${{ runner.temp }}/test-project
+              env:
+                  # Workaround Snowpack cache bug
+                  # https://github.com/snowpackjs/snowpack/issues/3533
+                  CACHE_DIR: ${{ runner.temp }}
+                  DEBUG: harness
+              run: npx patience 'hello.ts'

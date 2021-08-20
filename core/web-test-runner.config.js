@@ -3,6 +3,7 @@ const fs = require("fs");
 const proxy = require("koa-proxies");
 
 const snowpackPlugin = require("@snowpack/web-test-runner-plugin");
+const { chromeLauncher } = require("@web/test-runner");
 const harnessPlugin = require("./api/harness");
 
 process.env.NODE_ENV = "test";
@@ -38,4 +39,13 @@ module.exports = {
             timeout: 30000,
         },
     },
+    browsers: [
+        chromeLauncher({
+            launchOptions: {
+                args: process.env.CI ? [
+                    "--no-sandbox",
+                ] : [],
+            },
+        }),
+    ],
 };
