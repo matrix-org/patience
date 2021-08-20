@@ -40,6 +40,8 @@ and bobs:
   - `go install github.com/matrix-org/complement/cmd/homerunner@latest`
 - One or more Complement-ready [homeserver
   images](https://github.com/matrix-org/complement#running-against-dendrite)
+- Chrome
+  - We plan to switch to Playwright in the future to support additional browsers
 
 Create a directory to hold your tests and add Patience:
 
