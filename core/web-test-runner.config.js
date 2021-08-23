@@ -35,7 +35,7 @@ module.exports = {
     },
     testFramework: {
         config: {
-            timeout: 10000,
+            timeout: 30000,
         },
     },
 };
