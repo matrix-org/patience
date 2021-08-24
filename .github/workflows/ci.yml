@@ -32,7 +32,7 @@ jobs:
     test:
         runs-on: ubuntu-latest
         container:
-            image: ghcr.io/matrix-org/patience:latest
+            image: ghcr.io/matrix-org/patience-ci:latest
             env:
                 DOCKER_BUILDKIT: 1
             ports:
