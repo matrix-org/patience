@@ -1,5 +1,7 @@
 # Patience
 
+[![CI](https://github.com/matrix-org/patience/actions/workflows/ci.yml/badge.svg)](https://github.com/matrix-org/patience/actions/workflows/ci.yml)
+
 Full stack integration testing for Matrix clients and servers
 
 ![](example.png)
