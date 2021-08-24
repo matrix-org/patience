@@ -7,7 +7,7 @@
         "test": "patience '*.ts'"
     },
     "devDependencies": {
-        "@matrix-org/patience": "^0.0.0",
+        "@matrix-org/patience": "0.0.4",
         "@types/chai": "^4.2.21",
         "@types/mocha": "^8.2.3",
         "chai": "^4.3.4"
