@@ -64,8 +64,7 @@ jobs:
             - name: Checkout Complement
               uses: actions/checkout@v2
               with:
-                  repository: jryans/complement
-                  ref: debug-certs
+                  repository: matrix-org/complement
                   path: complement
 
             - name: Install Homerunner
