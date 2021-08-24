@@ -71,9 +71,10 @@ jobs:
               working-directory: ./complement
               run: go install ./cmd/homerunner
 
-            - name: Build homeserver image
-              working-directory: ./complement/dockerfiles
-              run: docker build -t complement-dendrite -f Dendrite.Dockerfile .
+            - name: Pull homeserver image
+              run: |
+                docker pull ghcr.io/matrix-org/complement-dendrite:latest
+                docker tag ghcr.io/matrix-org/complement-dendrite:latest complement-dendrite
 
             - name: Make test project directory
               working-directory: ${{ runner.temp }}
