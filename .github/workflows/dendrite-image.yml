@@ -1,0 +1,31 @@
+name: Build Dendrite Docker image
+
+on: workflow_dispatch
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            - name: Log in to container registry
+              uses: docker/login-action@v1
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Checkout Complement
+              uses: actions/checkout@v2
+              with:
+                  repository: matrix-org/complement
+                  path: complement
+
+            - name: Build & push
+              uses: docker/build-push-action@v2
+              with:
+                  context: ./complement/dockerfiles
+                  file: ./complement/dockerfiles/Dendrite.Dockerfile
+                  push: true
+                  tags: ghcr.io/matrix-org/complement-dendrite:latest
