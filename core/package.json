@@ -4,8 +4,10 @@
     "description": "Integration test harness for Matrix clients and servers",
     "author": "The Matrix.org Foundation C.I.C.",
     "license": "Apache-2.0",
-    "main": "./lib/api/test.js",
-    "types": "./lib/api/test.d.ts",
+    "main": "./api/test.ts",
+    "main_src": "./api/test.ts",
+    "main_lib": "./lib/api/test.js",
+    "types_lib": "./lib/api/test.d.ts",
     "bin": {
         "patience": "./bin/patience.js"
     },
