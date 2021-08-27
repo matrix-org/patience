@@ -19,10 +19,13 @@ import type { ComponentType } from "preact";
 import type { IClient } from "../../stores/client";
 import { ClientKind } from "../../../types/client";
 import ElementWebFrame from "./element-web";
+import HydrogenFrame from "./hydrogen";
 
 export default function getFrameForClient(client: IClient): ComponentType<{ client: IClient }> {
     switch (client.kind) {
         case ClientKind.ElementWeb:
             return ElementWebFrame;
+        case ClientKind.Hydrogen:
+            return HydrogenFrame;
     }
 }

@@ -14,9 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export type { IClient, IClientSnapshotIn } from "../framework/stores/client";
+import { h } from "preact";
+import type { FunctionComponent } from "preact";
+import { observer } from "mobx-react";
 
-export enum ClientKind {
-    ElementWeb = "Element Web",
-    Hydrogen = "Hydrogen",
-}
+import type { IClient } from "../../stores/client";
+import { ClientFrame } from "./frame";
+
+const HydrogenFrame: FunctionComponent<{ client: IClient }> = observer(({ client }) => {
+    return <ClientFrame client={client} url="/client/hydrogen/" />;
+});
+
+export default HydrogenFrame;

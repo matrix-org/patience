@@ -25,6 +25,11 @@ module.exports = {
             changeOrigin: true,
             rewrite: path => path.replace("/client/element-web", ""),
         }),
+        proxy("/client/hydrogen", {
+            target: "https://hydrogen.element.io",
+            changeOrigin: true,
+            rewrite: path => path.replace("/client/hydrogen", ""),
+        }),
     ],
     plugins: [
         snowpackPlugin(),

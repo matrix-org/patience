@@ -16,6 +16,7 @@ limitations under the License.
 
 import { ClientKind, IClient } from "../../types/client";
 import ElementWebAdapter from "./element-web";
+import HydrogenAdapter from "./hydrogen";
 
 export interface IClientAdapter {
     model: IClient;
@@ -31,5 +32,7 @@ export default function getAdapterForClient(client: IClient): IClientAdapter {
     switch (client.kind) {
         case ClientKind.ElementWeb:
             return new ElementWebAdapter(client);
+        case ClientKind.Hydrogen:
+            return new HydrogenAdapter(client);
     }
 }

@@ -41,6 +41,17 @@ module.exports = {
                 });
             },
         },
+        {
+            src: "/client/hydrogen.*",
+            dest(req, res) {
+                return proxy.web(req, res, {
+                    protocol: "https",
+                    hostname: "hydrogen.element.io",
+                    port: 443,
+                    path: req.url.replace("/client/hydrogen", ""),
+                });
+            },
+        },
     ],
     buildOptions: {
         out: "./build",
