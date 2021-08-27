@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import { h } from "preact";
+import { useCallback } from "preact/hooks";
 import type { FunctionComponent } from "preact";
 import { observer } from "mobx-react";
 
@@ -25,6 +26,12 @@ export const ClientFrame: FunctionComponent<{
     client: IClient;
     url: string;
 }> = observer(({ client, url }) => {
+    const frameRef = useCallback((frame: HTMLIFrameElement | null) => {
+        if (frame) {
+            client.setFrame(frame);
+        }
+    }, []);
+
     const location = client.active ? url : "about:blank";
 
     const frameStyles = {
@@ -40,7 +47,11 @@ export const ClientFrame: FunctionComponent<{
             <ZoomToolbar client={client} />
         </div>
         <div className="client-frame-frame">
-            <iframe id={client.userId} src={location} style={frameStyles}></iframe>
+            <iframe id={client.userId}
+                ref={frameRef}
+                src={location}
+                style={frameStyles}
+            ></iframe>
         </div>
     </div>;
 });

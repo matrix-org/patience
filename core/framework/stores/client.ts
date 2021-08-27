@@ -28,6 +28,9 @@ export const Client = types
         active: false,
         zoom: 100,
     })
+    .volatile(self => ({
+        frame: null as HTMLIFrameElement | null,
+    }))
     .views(self => ({
         get name(): string {
             return self.userId.split("@")[1].split(":")[0]
@@ -37,6 +40,9 @@ export const Client = types
     .actions(self => ({
         start() {
             self.active = true;
+        },
+        setFrame(frame: HTMLIFrameElement) {
+            self.frame = frame;
         },
         setZoom(value: number) {
             self.zoom = value;
