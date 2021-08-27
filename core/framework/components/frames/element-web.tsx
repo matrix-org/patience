@@ -19,27 +19,10 @@ import type { FunctionComponent } from "preact";
 import { observer } from "mobx-react";
 
 import type { IClient } from "../../stores/client";
-import ZoomToolbar from "../zoom-toolbar";
+import { ClientFrame } from "./frame";
 
 const ElementWebFrame: FunctionComponent<{ client: IClient }> = observer(({ client }) => {
-    const location = client.active ? "/client/element-web/#/home" : "about:blank";
-
-    const frameStyles = {
-        height: `${(100 / client.zoom) * 100}%`,
-        width: `${(100 / client.zoom) * 100}%`,
-        transform: `scale(${client.zoom / 100})`,
-        transformOrigin: "top left",
-    };
-
-    return <div className="client-frame">
-        <div className="client-frame-header">
-            <span className="client-frame-name">{client.name} ({client.userId})</span>
-            <ZoomToolbar client={client} />
-        </div>
-        <div className="client-frame-frame">
-            <iframe id={client.userId} src={location} style={frameStyles}></iframe>
-        </div>
-    </div>;
+    return <ClientFrame client={client} url="/client/element-web/#/home" />;
 });
 
 export default ElementWebFrame;
