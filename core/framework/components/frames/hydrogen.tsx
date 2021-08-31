@@ -22,7 +22,9 @@ import type { IClient } from "../../stores/client";
 import { ClientFrame } from "./frame";
 
 const HydrogenFrame: FunctionComponent<{ client: IClient }> = observer(({ client }) => {
-    return <ClientFrame client={client} url="/client/hydrogen/" />;
+    return <ClientFrame client={client}
+        url={`/client/hydrogen/#/session/${client.userId}`}
+    />;
 });
 
 export default HydrogenFrame;

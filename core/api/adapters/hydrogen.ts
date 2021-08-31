@@ -16,6 +16,7 @@ limitations under the License.
 
 import type { IClientAdapter } from ".";
 import type { IClient } from "../../types/client";
+import { waitForFrameDoc } from "./utils";
 
 export default class HydrogenAdapter implements IClientAdapter {
     constructor(public model: IClient) {
@@ -23,8 +24,48 @@ export default class HydrogenAdapter implements IClientAdapter {
 
     public async start(): Promise<void> {
         this.model.act("start");
-        // ...
-        this.model.start();
+
+        const { userId, homeserverUrl, accessToken } = this.model;
+
+        // Shared session array for possibly multiple Hydrogen clients
+        const sessions = JSON.parse(localStorage.getItem("hydrogen_sessions_v1") || "[]");
+        sessions.push({
+            id: userId,
+            deviceId: null,
+            userId,
+            homeServer: homeserverUrl,
+            homeserver: homeserverUrl,
+            accessToken,
+            lastUsed: Date.now(),
+        });
+        localStorage.setItem("hydrogen_sessions_v1", JSON.stringify(sessions));
+
+        const { frame } = this.model;
+        if (!frame) {
+            throw new Error("Client frame has not mounted");
+        }
+
+        // Wait for the frame document to be parsed
+        const frameDoc = await waitForFrameDoc(frame, () => {
+            this.model.start();
+        });
+
+        // Inject a helper script to disable service workers, as the multiple
+        // frames on same domain otherwise affect each other via the service
+        // worker.
+        const helperScript = frameDoc.createElement("script");
+        helperScript.textContent = "(" + function() {
+            // We can't delete navigator.serviceWorker, so instead we hide it
+            // with a proxy.
+            const navigatorProxy = new Proxy({}, {
+                has: (target, key) => key !== "serviceWorker" && key in target,
+            });
+            Object.defineProperty(window, "navigator", {
+                value: navigatorProxy,
+            });
+            console.log("Service worker support disabled");
+        } + ")()";
+        frameDoc.head.prepend(helperScript);
     }
 
     public async stop(): Promise<void> {
