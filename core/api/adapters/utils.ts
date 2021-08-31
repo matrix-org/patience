@@ -19,3 +19,49 @@ export function sleep(ms: number): Promise<void> {
         setTimeout(resolve, ms);
     });
 }
+
+/**
+ * Wait just long enough for the frame's document to be parsed. At this step,
+ * it's possible to override platform functions before the frame's own scripts
+ * run.
+ */
+export async function waitForFrameDoc(
+    frame: HTMLIFrameElement,
+    load: () => void,
+): Promise<Document> {
+    await new Promise<void>(resolve => {
+        const waitForNavigationLoop = setInterval(() => {
+            if (frame.contentWindow?.location.href === "about:blank") {
+                return;
+            }
+            clearInterval(waitForNavigationLoop);
+            resolve();
+        }, 10);
+        load();
+    });
+
+    await new Promise<void>(resolve => {
+        const waitForInteractive = () => {
+            if (frame.contentDocument?.readyState === "loading") {
+                return;
+            }
+            frame.contentDocument?.removeEventListener(
+                "readystatechange",
+                waitForInteractive,
+            );
+            resolve();
+        };
+        frame.contentDocument?.addEventListener(
+            "readystatechange",
+            waitForInteractive,
+        );
+        waitForInteractive();
+    });
+
+    const frameDoc = frame.contentDocument;
+    if (!frameDoc) {
+        throw new Error("Frame document missing");
+    }
+
+    return frameDoc;
+}
