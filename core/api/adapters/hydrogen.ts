@@ -16,7 +16,7 @@ limitations under the License.
 
 import type { IClientAdapter } from ".";
 import type { IClient } from "../../types/client";
-import { waitForFrameDoc } from "./utils";
+import { waitForFrameDoc } from "./utils/time";
 
 export default class HydrogenAdapter implements IClientAdapter {
     constructor(public model: IClient) {

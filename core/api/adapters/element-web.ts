@@ -18,7 +18,8 @@ import type { EventEmitter } from "events";
 
 import type { IClientAdapter } from ".";
 import type { IClient } from "../../types/client";
-import { sleep } from "./utils";
+import { IEventWindow, click, fill, press, query } from "./utils/io";
+import { sleep } from "./utils/time";
 
 interface IMatrixClientCreds {
     userId: string;
@@ -54,19 +55,11 @@ interface IMatrixClient extends EventEmitter {
     getRooms(): IMatrixRoom[];
 }
 
-interface IAppWindow extends Window {
+interface IFrameWindow extends IEventWindow {
     matrixChat: IMatrixChat;
     mxDispatcher: IDispatcher;
     mxMatrixClientPeg: {
         get(): IMatrixClient;
-    };
-    MouseEvent: {
-        prototype: MouseEvent;
-        new(type: string, eventInitDict?: MouseEventInit): MouseEvent;
-    };
-    KeyboardEvent: {
-        prototype: KeyboardEvent;
-        new(type: string, eventInitDict?: KeyboardEventInit): KeyboardEvent;
     };
 }
 
@@ -110,17 +103,17 @@ export default class ElementWebAdapter implements IClientAdapter {
     constructor(public model: IClient) {
     }
 
-    private get appWindow(): IAppWindow {
+    private get frameWindow(): IFrameWindow {
         // @ts-expect-error: Seems hard to type this
         return window[this.model.userId].contentWindow;
     }
 
     private get dispatcher(): IDispatcher {
-        return this.appWindow.mxDispatcher;
+        return this.frameWindow.mxDispatcher;
     }
 
     private get matrixClient(): IMatrixClient {
-        return this.appWindow.mxMatrixClientPeg.get();
+        return this.frameWindow.mxMatrixClientPeg.get();
     }
 
     public async start(): Promise<void> {
@@ -199,11 +192,11 @@ export default class ElementWebAdapter implements IClientAdapter {
 
     public async sendMessage(message: string): Promise<void> {
         this.model.act("sendMessage", message);
-        const composer = await this.query(".mx_SendMessageComposer");
-        this.click(composer);
-        this.fill(composer, message);
-        this.press(composer, "Enter");
-        await this.query(".mx_EventTile_last:not(.mx_EventTile_sending)");
+        const composer = await query(this.frameWindow, ".mx_SendMessageComposer");
+        click(this.frameWindow, composer);
+        fill(this.frameWindow, composer, message);
+        press(this.frameWindow, composer, "Enter");
+        await query(this.frameWindow, ".mx_EventTile_last:not(.mx_EventTile_sending)");
     }
 
     public async waitForMessage(): Promise<string> {
@@ -217,51 +210,6 @@ export default class ElementWebAdapter implements IClientAdapter {
         });
         this.model.act("waitedForMessage", `${performance.now() - start} ms`);
         return message;
-    }
-
-    private async query(selector: string): Promise<Element> {
-        return new Promise<Element>(resolve => {
-            const waitLoop = setInterval(() => {
-                const element = this.appWindow.document.querySelector(selector);
-                if (!element) {
-                    return;
-                }
-                clearInterval(waitLoop);
-                resolve(element);
-            }, 50);
-        });
-    }
-
-    private click(element: Element) {
-        const rect = element.getBoundingClientRect();
-        const MouseEvent = this.appWindow.MouseEvent;
-        const event = new MouseEvent("click", {
-            clientX: rect.left + rect.width / 2,
-            clientY: rect.top + rect.height / 2,
-            bubbles: true,
-            cancelable: true,
-        });
-        element.dispatchEvent(event);
-    }
-
-    private fill(element: Element, message: string) {
-        element.ownerDocument.execCommand("insertText", false, message);
-    }
-
-    private press(element: Element, key: string) {
-        const KeyboardEvent = this.appWindow.KeyboardEvent;
-        const down = new KeyboardEvent("keydown", {
-            key,
-            bubbles: true,
-            cancelable: true,
-        });
-        element.dispatchEvent(down);
-        const up = new KeyboardEvent("keyup", {
-            key,
-            bubbles: true,
-            cancelable: true,
-        });
-        element.dispatchEvent(up);
     }
 
     private async clearStorage(): Promise<void> {
