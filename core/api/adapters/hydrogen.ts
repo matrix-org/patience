@@ -14,12 +14,42 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import type { EventEmitter } from "events";
+
 import type { IClientAdapter } from ".";
 import type { IClient } from "../../types/client";
+import type { IEventWindow } from "./utils/io";
 import { waitForFrameDoc } from "./utils/time";
+
+interface ISessionItemViewModel extends EventEmitter {
+    delete: () => Promise<void>;
+}
+
+interface ISessionPickerViewModel extends EventEmitter {
+    sessions: ISessionItemViewModel[];
+    delete: (id: string) => Promise<void>;
+}
+
+interface IRootViewModel extends EventEmitter {
+    sessionPickerViewModel?: ISessionPickerViewModel;
+    _showPicker: () => Promise<void>;
+}
+
+interface IFrameWindow extends IEventWindow {
+    __hydrogenViewModel: IRootViewModel;
+}
 
 export default class HydrogenAdapter implements IClientAdapter {
     constructor(public model: IClient) {
+    }
+
+    private get frameWindow(): IFrameWindow {
+        // @ts-expect-error: Seems hard to type this
+        return window[this.model.userId].contentWindow;
+    }
+
+    private get viewModel(): IRootViewModel {
+        return this.frameWindow.__hydrogenViewModel;
     }
 
     public async start(): Promise<void> {
@@ -71,6 +101,8 @@ export default class HydrogenAdapter implements IClientAdapter {
 
     public async stop(): Promise<void> {
         this.model.act("stop");
+        await this.viewModel._showPicker();
+        await this.viewModel.sessionPickerViewModel?.delete(this.model.userId);
     }
 
     public async waitForRoom(): Promise<void> {
