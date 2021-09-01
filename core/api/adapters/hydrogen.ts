@@ -28,7 +28,8 @@ export default class HydrogenAdapter implements IClientAdapter {
         const { userId, homeserverUrl, accessToken } = this.model;
 
         // Shared session array for possibly multiple Hydrogen clients
-        const sessions = JSON.parse(localStorage.getItem("hydrogen_sessions_v1") || "[]");
+        let sessions = JSON.parse(localStorage.getItem("hydrogen_sessions_v1") || "[]");
+        sessions = sessions.filter(({ id }: {id: string}) => id !== userId);
         sessions.push({
             id: userId,
             deviceId: null,
