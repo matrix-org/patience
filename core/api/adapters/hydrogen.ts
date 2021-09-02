@@ -30,8 +30,43 @@ interface ISessionPickerViewModel extends EventEmitter {
     delete: (id: string) => Promise<void>;
 }
 
+interface IWaitForHandle<T> {
+    promise: Promise<T>;
+}
+
+interface IObservableValue<T> {
+    get: () => T;
+    waitFor: (predicate: (value: T) => boolean) => IWaitForHandle<T>;
+}
+
+enum LoadStatus {
+    NotLoading = "NotLoading",
+    Login = "Login",
+    LoginFailed = "LoginFailed",
+    Loading = "Loading",
+    SessionSetup = "SessionSetup",
+    Migrating = "Migrating",
+    FirstSync = "FirstSync",
+    Error = "Error",
+    Ready = "Ready",
+}
+
+interface ISession {
+    rooms: Map<string, object>;
+}
+
+interface ISessionContainer {
+    loadStatus: IObservableValue<LoadStatus>;
+    session?: ISession;
+}
+
+interface ISessionViewModel extends EventEmitter {
+    _sessionContainer: ISessionContainer;
+}
+
 interface IRootViewModel extends EventEmitter {
     sessionPickerViewModel?: ISessionPickerViewModel;
+    sessionViewModel?: ISessionViewModel;
     _showPicker: () => Promise<void>;
 }
 
@@ -97,6 +132,17 @@ export default class HydrogenAdapter implements IClientAdapter {
             console.log("Service worker support disabled");
         } + ")()";
         frameDoc.head.prepend(helperScript);
+
+        // Wait for root view model
+        await new Promise<void>(resolve => {
+            const waitForRootViewModel = setInterval(() => {
+                if (!this.viewModel) {
+                    return;
+                }
+                clearInterval(waitForRootViewModel);
+                resolve();
+            }, 10);
+        });
     }
 
     public async stop(): Promise<void> {
@@ -107,6 +153,33 @@ export default class HydrogenAdapter implements IClientAdapter {
 
     public async waitForRooms(): Promise<void> {
         this.model.act("waitForRooms");
+        if (!this.viewModel.sessionViewModel) {
+            await new Promise<void>(resolve => {
+                const changeHandler = (changed: string) => {
+                    if (changed !== "activeSection") {
+                        return;
+                    }
+                    if (!this.viewModel.sessionViewModel) {
+                        return;
+                    }
+                    this.viewModel.off("change", changeHandler);
+                    resolve();
+                };
+                this.viewModel.on("change", changeHandler);
+            });
+        }
+        if (!this.viewModel.sessionViewModel) {
+            throw new Error("Session view model not ready");
+        }
+        const sessionContainer = this.viewModel.sessionViewModel._sessionContainer;
+        const { loadStatus } = sessionContainer;
+        await loadStatus.waitFor(status => status === LoadStatus.Ready).promise;
+        if (!sessionContainer.session) {
+            throw new Error("Session missing");
+        }
+        if (sessionContainer.session.rooms.size === 0) {
+            throw new Error("Rooms failed to load");
+        }
     }
 
     public async viewRoom(roomId?: string): Promise<void> {
