@@ -22,7 +22,7 @@ export interface IClientAdapter {
     model: IClient;
     start(): Promise<void>;
     stop(): Promise<void>;
-    waitForRoom(): Promise<void>;
+    waitForRooms(): Promise<void>;
     viewRoom(roomId?: string): Promise<void>;
     sendMessage(message: string): Promise<void>;
     waitForMessage(): Promise<string>;

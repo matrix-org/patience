@@ -105,8 +105,8 @@ export default class HydrogenAdapter implements IClientAdapter {
         await this.viewModel.sessionPickerViewModel?.delete(this.model.userId);
     }
 
-    public async waitForRoom(): Promise<void> {
-        this.model.act("waitForRoom");
+    public async waitForRooms(): Promise<void> {
+        this.model.act("waitForRooms");
     }
 
     public async viewRoom(roomId?: string): Promise<void> {

@@ -36,8 +36,8 @@ it("logs into both clients", async function() {
 });
 
 it("has a conversation", async function() {
-    await alice.waitForRoom();
-    await bob.waitForRoom();
+    await alice.waitForRooms();
+    await bob.waitForRooms();
     await alice.viewRoom();
     await bob.viewRoom();
 

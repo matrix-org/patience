@@ -166,8 +166,8 @@ export default class ElementWebAdapter implements IClientAdapter {
         this.dispatcher.dispatch({ action: "logout" }, true);
     }
 
-    public async waitForRoom(): Promise<void> {
-        this.model.act("waitForRoom");
+    public async waitForRooms(): Promise<void> {
+        this.model.act("waitForRooms");
         await new Promise<void>(resolve => {
             const waitLoop = setInterval(() => {
                 if (!this.matrixClient.getRooms().length) {
