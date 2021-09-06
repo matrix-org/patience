@@ -184,6 +184,19 @@ export default class HydrogenAdapter implements IClientAdapter {
 
     public async viewRoom(roomId?: string): Promise<void> {
         this.model.act("viewRoom", roomId);
+        if (!roomId) {
+            if (!this.viewModel.sessionViewModel) {
+                throw new Error("Session view model not ready");
+            }
+            const sessionContainer = this.viewModel.sessionViewModel._sessionContainer;
+            if (!sessionContainer.session) {
+                throw new Error("Session missing");
+            }
+            roomId = sessionContainer.session.rooms.keys().next().value;
+        }
+        const { userId } = this.model;
+        const { location } = this.frameWindow;
+        location.hash = `#/session/${userId}/open-room/${roomId}`;
     }
 
     public async sendMessage(message: string): Promise<void> {
