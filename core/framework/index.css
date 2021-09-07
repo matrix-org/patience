@@ -66,7 +66,7 @@ body {
 }
 
 .client-frame-frame {
-    min-height: 400px;
+    height: 400px;
     overflow: hidden;
     border: 1px solid;
     box-sizing: content-box;
