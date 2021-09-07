@@ -20,6 +20,21 @@ export function sleep(ms: number): Promise<void> {
     });
 }
 
+export async function pollFor(predicate: () => boolean | null): Promise<void> {
+    if (predicate()) {
+        return;
+    }
+    return new Promise(resolve => {
+        const pollLoop = setInterval(() => {
+            if (!predicate()) {
+                return;
+            }
+            clearInterval(pollLoop);
+            resolve();
+        }, 10);
+    });
+}
+
 /**
  * Wait just long enough for the frame's document to be parsed. At this step,
  * it's possible to override platform functions before the frame's own scripts
@@ -29,16 +44,11 @@ export async function waitForFrameDoc(
     frame: HTMLIFrameElement,
     load: () => void,
 ): Promise<Document> {
-    await new Promise<void>(resolve => {
-        const waitForNavigationLoop = setInterval(() => {
-            if (frame.contentWindow?.location.href === "about:blank") {
-                return;
-            }
-            clearInterval(waitForNavigationLoop);
-            resolve();
-        }, 10);
-        load();
+    const pollForNavigation = pollFor(() => {
+        return frame.contentWindow && frame.contentWindow.location.href !== "about:blank";
     });
+    load();
+    await pollForNavigation;
 
     await new Promise<void>(resolve => {
         const waitForInteractive = () => {

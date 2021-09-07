@@ -134,15 +134,7 @@ export default class HydrogenAdapter implements IClientAdapter {
         frameDoc.head.prepend(helperScript);
 
         // Wait for root view model
-        await new Promise<void>(resolve => {
-            const waitForRootViewModel = setInterval(() => {
-                if (!this.viewModel) {
-                    return;
-                }
-                clearInterval(waitForRootViewModel);
-                resolve();
-            }, 10);
-        });
+        await pollFor(() => !!this.viewModel);
     }
 
     public async stop(): Promise<void> {
