@@ -30,6 +30,11 @@ const { servers, clients } = await orchestrate({
 const alice = window.alice = clients[0];
 const bob = window.bob = clients[1];
 
+after(async () => {
+    await alice.stop();
+    await bob.stop();
+});
+
 it("displays 2 client frames", async function() {
     expect(Object.keys(servers.homeservers.hs1.accessTokens).length).to.equal(2);
     expect(clients.length).to.equal(2);

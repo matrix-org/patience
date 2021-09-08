@@ -30,6 +30,11 @@ const { clients } = await orchestrate({
 const alice = window.alice = clients[0];
 const bob = window.bob = clients[1];
 
+after(async () => {
+    await alice.stop();
+    await bob.stop();
+});
+
 it("logs into both clients", async function() {
     await alice.start();
     await bob.start();
