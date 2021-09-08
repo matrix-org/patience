@@ -9,6 +9,7 @@ Full stack integration testing for Matrix clients and servers
 
 ## Features
 
+* Any permutation of supported clients can be tested together
 * Client specifics are hidden by default (but still accessible) so tests can
   target many clients without modification
 * Tests written in TypeScript
@@ -22,7 +23,7 @@ Full stack integration testing for Matrix clients and servers
 Patience aims to support testing different combinations of Matrix clients and
 servers in a unified environment.
 
-At the moment, Element Web is the only supported client, but anything that fits
+Element Web and Hydrogen are the currently supported clients. Anything that fits
 in an `iframe` should be easy to add. Tools such as
 [Appetize](https://appetize.io/) could be used to add mobile clients.
 
