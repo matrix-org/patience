@@ -52,7 +52,7 @@ it("has a conversation", async function() {
     await alice.viewRoom();
     await bob.viewRoom();
 
-    const bobWaitsForMessage = bob.waitForMessage();
+    const bobWaitsForMessage = bob.waitForMessage("Hi Bob!");
     await alice.sendMessage("Hi Bob!");
     expect(await bobWaitsForMessage).to.equal("Hi Bob!");
     await bob.sendMessage("Hello Alice!");

@@ -237,7 +237,7 @@ export default class HydrogenAdapter implements IClientAdapter {
         await query(this.frameWindow, ".Timeline_message:last-child:not(.unsent)");
     }
 
-    public async waitForMessage(): Promise<string> {
+    public async waitForMessage(expected?: string): Promise<string> {
         // TODO: Maybe we should have generic tracing spans...?
         this.model.act("waitForMessage");
         const start = performance.now();
@@ -249,11 +249,15 @@ export default class HydrogenAdapter implements IClientAdapter {
         const message: string = await new Promise(resolve => {
             const dispose = timeline.entries.subscribe({
                 onAdd(_, event) {
-                    if (!event?.content?.body) {
+                    const body = event?.content?.body;
+                    if (!body) {
+                        return;
+                    }
+                    if (expected && body !== expected) {
                         return;
                     }
                     dispose();
-                    resolve(event.content.body);
+                    resolve(body);
                 },
                 onUpdate() { },
             });

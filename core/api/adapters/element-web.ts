@@ -51,6 +51,14 @@ interface IMatrixRoom {
     roomId: string;
 }
 
+interface IEventContent {
+    body?: string;
+}
+
+interface IMatrixEvent {
+    getContent: () => IEventContent;
+}
+
 interface IMatrixClient extends EventEmitter {
     getRooms(): IMatrixRoom[];
 }
@@ -199,14 +207,22 @@ export default class ElementWebAdapter implements IClientAdapter {
         await query(this.frameWindow, ".mx_EventTile_last:not(.mx_EventTile_sending)");
     }
 
-    public async waitForMessage(): Promise<string> {
+    public async waitForMessage(expected?: string): Promise<string> {
         // TODO: Maybe we should have generic tracing spans...?
         this.model.act("waitForMessage");
         const start = performance.now();
         const message: string = await new Promise(resolve => {
-            this.matrixClient.once("Room.timeline", event => {
-                resolve(event.getContent().body);
-            });
+            const handler = (event: IMatrixEvent) => {
+                const body = event.getContent().body;
+                if (!body) {
+                    return;
+                }
+                if (expected && body !== expected) {
+                    return;
+                }
+                resolve(body);
+            };
+            this.matrixClient.on("Room.timeline", handler);
         });
         this.model.act("waitedForMessage", `${performance.now() - start} ms`);
         return message;

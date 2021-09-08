@@ -25,7 +25,7 @@ export interface IClientAdapter {
     waitForRooms(): Promise<void>;
     viewRoom(roomId?: string): Promise<void>;
     sendMessage(message: string): Promise<void>;
-    waitForMessage(): Promise<string>;
+    waitForMessage(expected?: string): Promise<string>;
 }
 
 export default function getAdapterForClient(client: IClient): IClientAdapter {
