@@ -25,10 +25,10 @@ export interface IEventWindow extends Window {
     };
 }
 
-export async function query(win: IEventWindow, selector: string): Promise<Element> {
-    return new Promise<Element>(resolve => {
+export async function query(win: IEventWindow, selector: string): Promise<HTMLElement> {
+    return new Promise<HTMLElement>(resolve => {
         const waitLoop = setInterval(() => {
-            const element = win.document.querySelector(selector);
+            const element = win.document.querySelector<HTMLElement>(selector);
             if (!element) {
                 return;
             }
@@ -38,7 +38,7 @@ export async function query(win: IEventWindow, selector: string): Promise<Elemen
     });
 }
 
-export function click(win: IEventWindow, element: Element) {
+export function click(win: IEventWindow, element: HTMLElement) {
     const rect = element.getBoundingClientRect();
     const MouseEvent = win.MouseEvent;
     const event = new MouseEvent("click", {
@@ -50,11 +50,11 @@ export function click(win: IEventWindow, element: Element) {
     element.dispatchEvent(event);
 }
 
-export function fill(win: IEventWindow, element: Element, message: string) {
+export function fill(win: IEventWindow, element: HTMLElement, message: string) {
     element.ownerDocument.execCommand("insertText", false, message);
 }
 
-export function press(win: IEventWindow, element: Element, key: string) {
+export function press(win: IEventWindow, element: HTMLElement, key: string) {
     const KeyboardEvent = win.KeyboardEvent;
     const down = new KeyboardEvent("keydown", {
         key,
