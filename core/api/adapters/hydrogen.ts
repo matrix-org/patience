@@ -18,8 +18,8 @@ import type { EventEmitter } from "events";
 
 import type { IClientAdapter } from ".";
 import type { IClient } from "../../types/client";
-import type { IEventWindow } from "./utils/io";
-import { waitForFrameDoc } from "./utils/time";
+import { IEventWindow, click, fill, press, query } from "./utils/io";
+import { pollFor, waitForFrameDoc } from "./utils/time";
 
 interface ISessionItemViewModel extends EventEmitter {
     delete: () => Promise<void>;
@@ -60,8 +60,39 @@ interface ISessionContainer {
     session?: ISession;
 }
 
+interface IListHandler<T> {
+    onAdd: (index: number, value: T, handler: this) => void;
+    onUpdate: (index: number, value: T, params: object, handler: this) => void;
+}
+
+interface IObservableList<T> {
+    subscribe: (handler: IListHandler<T>) => Function;
+    unsubscribe: (handler: IListHandler<T>) => void;
+}
+
+interface IEventContent {
+    body?: string;
+}
+
+interface IEventEntry {
+    content?: IEventContent;
+}
+
+interface ITimeline {
+    entries: IObservableList<IEventEntry>;
+}
+
+interface ITimelineViewModel extends EventEmitter {
+    _timeline: ITimeline;
+}
+
+interface IRoomViewModel extends EventEmitter {
+    timelineViewModel?: ITimelineViewModel;
+}
+
 interface ISessionViewModel extends EventEmitter {
     _sessionContainer: ISessionContainer;
+    currentRoomViewModel?: IRoomViewModel;
 }
 
 interface IRootViewModel extends EventEmitter {
@@ -85,6 +116,11 @@ export default class HydrogenAdapter implements IClientAdapter {
 
     private get viewModel(): IRootViewModel {
         return this.frameWindow.__hydrogenViewModel;
+    }
+
+    private get timeline(): ITimeline | undefined {
+        const room = this.viewModel.sessionViewModel?.currentRoomViewModel;
+        return room?.timelineViewModel?._timeline;
     }
 
     public async start(): Promise<void> {
@@ -193,11 +229,36 @@ export default class HydrogenAdapter implements IClientAdapter {
 
     public async sendMessage(message: string): Promise<void> {
         this.model.act("sendMessage", message);
+        const composer = await query(this.frameWindow, ".MessageComposer_input > input");
+        click(this.frameWindow, composer);
+        composer.focus();
+        fill(this.frameWindow, composer, message);
+        press(this.frameWindow, composer, "Enter");
+        await query(this.frameWindow, ".Timeline_message:last-child:not(.unsent)");
     }
 
     public async waitForMessage(): Promise<string> {
         // TODO: Maybe we should have generic tracing spans...?
         this.model.act("waitForMessage");
-        return "";
+        const start = performance.now();
+        await pollFor(() => !!this.timeline);
+        const timeline = this.timeline;
+        if (!timeline) {
+            throw new Error("Timeline missing");
+        }
+        const message: string = await new Promise(resolve => {
+            const dispose = timeline.entries.subscribe({
+                onAdd(_, event) {
+                    if (!event?.content?.body) {
+                        return;
+                    }
+                    dispose();
+                    resolve(event.content.body);
+                },
+                onUpdate() { },
+            });
+        });
+        this.model.act("waitedForMessage", `${performance.now() - start} ms`);
+        return message;
     }
 }
