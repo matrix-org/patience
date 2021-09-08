@@ -1,6 +1,7 @@
 # Patience
 
 [![CI](https://github.com/matrix-org/patience/actions/workflows/ci.yml/badge.svg)](https://github.com/matrix-org/patience/actions/workflows/ci.yml)
+[![Matrix](https://img.shields.io/matrix/matrix-patience:matrix.org?label=%23matrix-patience%3Amatrix.org&logo=matrix)](https://matrix.to/#/#matrix-patience:matrix.org)
 
 Full stack integration testing for Matrix clients and servers
 
