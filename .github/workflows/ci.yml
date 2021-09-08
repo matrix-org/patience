@@ -96,4 +96,4 @@ jobs:
                   # https://github.com/snowpackjs/snowpack/issues/3533
                   CACHE_DIR: ${{ runner.temp }}
                   DEBUG: harness
-              run: npx patience 'hello.ts'
+              run: npx patience '*.ts'
