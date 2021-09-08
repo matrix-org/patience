@@ -17,7 +17,7 @@ limitations under the License.
 // This file is imported by tests using the harness to arrange things like
 // servers and clients for use in the test.
 
-import type { ClientKind, IClientSnapshotIn } from "../types/client";
+import type { IClientSnapshotIn } from "../types/client";
 import getAdapterForClient from "./adapters";
 import type { IHomerunnerResponse, IOrchestrationRequest, IOrchestrationResponse } from "./rpc";
 
@@ -31,15 +31,19 @@ export async function orchestrate(request: IOrchestrationRequest): Promise<IOrch
         request: request.servers,
     });
 
+    let clientIndex = 0;
     for (const server of Object.values(servers.homeservers)) {
         const homeserverUrl = server.baseUrl;
         for (const [userId, accessToken] of Object.entries(server.accessTokens)) {
+            let kind = request.clients;
+            if (Array.isArray(kind)) {
+                kind = kind[clientIndex++];
+            }
             const client: IClientSnapshotIn = {
                 userId,
                 homeserverUrl,
                 accessToken,
-                // TODO: Support arrays as well
-                kind: request.clients as ClientKind,
+                kind,
             };
             // Add them to the harness UI
             window.clientStore.add(client);
