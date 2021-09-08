@@ -122,10 +122,14 @@ module.exports = {
                 }
             } catch (e) {
                 console.error(e);
+                let error;
+                if (e instanceof Error) {
+                    error = e.toString();
+                }
                 webSocket.send(JSON.stringify({
                     type: "message-response",
                     id: data.id,
-                    error: e.toString(),
+                    error,
                 }));
             }
         });
