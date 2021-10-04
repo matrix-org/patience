@@ -16,8 +16,6 @@ limitations under the License.
 
 import { Instance, SnapshotIn, types } from "mobx-state-tree";
 
-// import { Client } from "./client";
-
 const Action = types
     .model("Action", {
         // TODO: Figure out references...
