@@ -29,7 +29,8 @@ if (import.meta.env.MODE === "development") {
 // CSS load time during development.
 import "./index.css";
 
-import { h, Fragment, render, FunctionComponent } from "preact";
+import type { FunctionComponent } from "preact";
+import { h, Fragment, render } from "preact";
 import { observer } from "mobx-react";
 
 import ClientFrames from "./components/client-frames";

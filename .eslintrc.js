@@ -55,6 +55,9 @@ module.exports = {
 
                 // Empty interfaces are useful for declaring new names
                 "@typescript-eslint/no-empty-interface": ["off"],
+
+                // Always use `import type` for type-only imports
+                "@typescript-eslint/consistent-type-imports": ["error"],
             },
         },
         {

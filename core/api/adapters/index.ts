@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { ClientKind, IClient } from "../../types/client";
+import type { IClient } from "../../types/client";
+import { ClientKind } from "../../types/client";
 import ElementWebAdapter from "./element-web";
 import HydrogenAdapter from "./hydrogen";
 

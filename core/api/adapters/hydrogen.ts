@@ -18,7 +18,8 @@ import type { EventEmitter } from "events";
 
 import type { IClientAdapter } from ".";
 import type { IClient } from "../../types/client";
-import { IEventWindow, click, fill, press, query } from "./utils/io";
+import type { IEventWindow } from "./utils/io";
+import { click, fill, press, query } from "./utils/io";
 import { pollFor, waitForFrameDoc } from "./utils/time";
 
 interface ISessionItemViewModel extends EventEmitter {

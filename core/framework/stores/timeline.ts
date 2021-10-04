@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Instance, SnapshotIn, types } from "mobx-state-tree";
+import type { Instance, SnapshotIn } from "mobx-state-tree";
+import { types } from "mobx-state-tree";
 
 const Action = types
     .model("Action", {

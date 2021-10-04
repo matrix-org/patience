@@ -22,7 +22,8 @@ import type { Plugin } from "@web/dev-server-core";
 import debug from "debug";
 
 import type { IHomerunnerRequest, IHomerunnerResponse } from "./rpc";
-import { camelToSnake, Data, fromHomerunner } from "./utils";
+import type { Data } from "./utils";
+import { camelToSnake, fromHomerunner } from "./utils";
 
 const log = debug("harness");
 

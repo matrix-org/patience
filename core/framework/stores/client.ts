@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { cast, Instance, SnapshotIn, SnapshotOrInstance, types } from "mobx-state-tree";
+import type { Instance, SnapshotIn, SnapshotOrInstance } from "mobx-state-tree";
+import { cast, types } from "mobx-state-tree";
 
 import { ClientKind } from "../../types/client";
 import timeline from "./timeline";
