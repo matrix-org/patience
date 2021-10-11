@@ -23,7 +23,9 @@ import type { IHomerunnerResponse, IOrchestrationRequest, IOrchestrationResponse
 
 export async function orchestrate(request: IOrchestrationRequest): Promise<IOrchestrationResponse> {
     // @ts-expect-error: No types available, maybe add some locally
-    const webSocketModule = await import("/__web-dev-server__web-socket.js");
+    // TODO: Find some way to reference the Web Test Runner port here instead of
+    // assuming the default value.
+    const webSocketModule = await import("http://localhost:8000/__web-dev-server__web-socket.js");
     const { sendMessageWaitForResponse } = webSocketModule;
 
     const servers: IHomerunnerResponse = await sendMessageWaitForResponse({

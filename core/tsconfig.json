@@ -12,9 +12,13 @@
         "skipLibCheck": true,
         "esModuleInterop": true,
         "isolatedModules": true,
+        "useDefineForClassFields": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
         "importsNotUsedAsValues": "error",
+        "types": [
+            "vite/client",
+        ],
     },
     "ts-node": {
         "transpileOnly": true,

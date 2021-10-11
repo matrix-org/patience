@@ -41,7 +41,7 @@ try {
         stdio: "inherit",
         // Run as if we're in the core directory
         cwd: path.dirname(require.resolve("@matrix-org/patience/package.json")),
-        // Expose test directory for referencing in the Snowpack config
+        // Expose test directory for referencing in the Vite config
         env: Object.assign({
             PATIENCE_TEST_DIR: cwd,
         }, process.env),

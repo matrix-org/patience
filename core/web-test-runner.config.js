@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const proxy = require("koa-proxies");
 
-const snowpackPlugin = require("@snowpack/web-test-runner-plugin");
+const vitePlugin = require("vite-web-test-runner-plugin");
 const { chromeLauncher } = require("@web/test-runner");
 const harnessPlugin = require("./api/harness");
 
@@ -13,13 +13,6 @@ process.env.NODE_ENV = "test";
 
 module.exports = {
     middleware: [
-        function loadAsJS(context, next) {
-            // Snowpack expects *.ts files to be requested as *.js
-            if (context.url.includes(".ts")) {
-                context.url = context.url.replace(".ts", ".js");
-            }
-            return next();
-        },
         proxy("/client/element-web", {
             target: "https://develop.element.io",
             changeOrigin: true,
@@ -32,12 +25,14 @@ module.exports = {
         }),
     ],
     plugins: [
-        snowpackPlugin(),
+        vitePlugin(),
         harnessPlugin,
     ],
     testRunnerHtml: testFramework => {
-        const html = fs.readFileSync("./framework/index.html", "utf8");
-        return html.replace("${testFramework}", testFramework);
+        let html = fs.readFileSync("./framework/index.html", "utf8");
+        html = html.replace("${testFramework}", testFramework);
+        html = html.replace("ignore", "module");
+        return html;
     },
     testFramework: {
         config: {

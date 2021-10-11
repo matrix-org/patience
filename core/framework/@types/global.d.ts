@@ -19,12 +19,6 @@ import type { IClientStore } from "../stores/client";
 import type { ITimeline } from "../stores/timeline";
 
 declare global {
-    interface ImportMeta {
-        env: {
-            [key: string]: string;
-        };
-    }
-
     interface Window {
         clientStore: IClientStore;
         timeline: ITimeline;
