@@ -25,7 +25,7 @@ const { servers, clients } = await orchestrate({
     servers: {
         blueprintName: "oneToOneRoom",
     },
-    clients: ClientKind.Hydrogen,
+    clients: ClientKind.ElementWeb,
 });
 const alice = window.alice = clients[0];
 const bob = window.bob = clients[1];
