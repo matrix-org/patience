@@ -24,6 +24,8 @@ const cwd = process.cwd();
 const testRunnerBinPath = require.resolve("@web/test-runner")
     .replace(/test-runner.*$/, "test-runner/dist/bin.js");
 
+const testFiles = process.argv[2];
+
 try {
     const result = childProcess.spawnSync("npx", [
         "ts-node",
@@ -31,7 +33,7 @@ try {
         testRunnerBinPath,
         // Tests to run, e.g. `*.ts`
         // TODO: Handle multiple file paths or provide a nice error message
-        path.join(cwd, process.argv[2]),
+        path.join(cwd, testFiles),
         // TODO: Work out the best way to manage parallel orchestration
         "--concurrency",
         "1",
@@ -44,6 +46,7 @@ try {
         // Expose test directory for referencing in the Vite config
         env: Object.assign({
             PATIENCE_TEST_DIR: cwd,
+            PATIENCE_TEST_FILES: testFiles,
         }, process.env),
     });
     process.exitCode = result.status;
