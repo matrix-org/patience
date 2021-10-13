@@ -93,8 +93,5 @@ jobs:
             - name: Test
               working-directory: ${{ runner.temp }}/test-project
               env:
-                  # Workaround Snowpack cache bug
-                  # https://github.com/snowpackjs/snowpack/issues/3533
-                  CACHE_DIR: ${{ runner.temp }}
                   DEBUG: harness
               run: npx patience 'hello.ts'
