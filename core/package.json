@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "@web/test-runner": "^0.13.17",
+        "appium": "^1.22.0",
         "classnames": "^2.3.1",
         "debug": "^4.3.2",
         "http2-proxy": "^5.0.53",
