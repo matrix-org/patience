@@ -17,6 +17,7 @@ limitations under the License.
 export type { IClient, IClientSnapshotIn } from "../framework/stores/client";
 
 export enum ClientKind {
+    ElementAndroid = "Element Android",
     ElementWeb = "Element Web",
     Hydrogen = "Hydrogen",
 }

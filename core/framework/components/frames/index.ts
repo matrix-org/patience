@@ -20,9 +20,12 @@ import type { IClient } from "../../stores/client";
 import { ClientKind } from "../../../types/client";
 import ElementWebFrame from "./element-web";
 import HydrogenFrame from "./hydrogen";
+import ElementAndroidFrame from "./element-android";
 
 export default function getFrameForClient(client: IClient): ComponentType<{ client: IClient }> {
     switch (client.kind) {
+        case ClientKind.ElementAndroid:
+            return ElementAndroidFrame;
         case ClientKind.ElementWeb:
             return ElementWebFrame;
         case ClientKind.Hydrogen:
