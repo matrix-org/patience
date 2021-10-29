@@ -1,5 +1,6 @@
 const fs = require("fs");
 
+const handleError = require("koa-handle-error");
 const proxy = require("koa-proxies");
 
 const vitePlugin = require("vite-web-test-runner-plugin");
@@ -13,6 +14,12 @@ process.env.NODE_ENV = "test";
 
 module.exports = {
     middleware: [
+        handleError(err => {
+            if (err.message.includes("Http response closed while proxying")) {
+                return;
+            }
+            console.log(err);
+        }),
         proxy("/client/element-web", {
             target: "https://develop.element.io",
             changeOrigin: true,

@@ -24,6 +24,7 @@
         "cosmiconfig": "^7.0.1",
         "debug": "^4.3.2",
         "http2-proxy": "^5.0.53",
+        "koa-handle-error": "^0.0.5",
         "koa-proxies": "^0.12.1",
         "mobx": "^6.3.3",
         "mobx-react": "^7.2.0",
